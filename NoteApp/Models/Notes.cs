@@ -8,6 +8,8 @@ namespace NoteApp.Models
         private string _content = string.Empty;
         private DateTime _dateCreated;
         private DateTime _dateModified;
+        private string _category = "General";
+        private string _tags = string.Empty;
 
         public int Id { get; set; }
         
@@ -28,6 +30,28 @@ namespace NoteApp.Models
             set
             {
                 _content = value;
+                DateModified = DateTime.Now;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Category
+        {
+            get => _category;
+            set
+            {
+                _category = value;
+                DateModified = DateTime.Now;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Tags
+        {
+            get => _tags;
+            set
+            {
+                _tags = value;
                 DateModified = DateTime.Now;
                 OnPropertyChanged();
             }

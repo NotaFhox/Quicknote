@@ -292,10 +292,18 @@ C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\w
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\NoteApp.pdb
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\resources.pri
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Web.WebView2.Core.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Data.Sqlite.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.EntityFrameworkCore.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.EntityFrameworkCore.Sqlite.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Caching.Memory.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Configuration.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.DependencyModel.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Logging.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Logging.Debug.dll
@@ -325,6 +333,10 @@ C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\w
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.System.Projection.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.Widgets.Projection.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.WindowsAppRuntime.Bootstrap.Net.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\SQLite-net.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\SQLitePCLRaw.batteries_v2.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\SQLitePCLRaw.core.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\SQLitePCLRaw.provider.e_sqlite3.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\ar\Microsoft.Maui.Controls.resources.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\ca\Microsoft.Maui.Controls.resources.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\cs\Microsoft.Maui.Controls.resources.dll
@@ -362,6 +374,7 @@ C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\w
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Graphics.Canvas.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\WebView2Loader.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.WindowsAppRuntime.Bootstrap.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\e_sqlite3.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Windows.SDK.NET.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\WinRT.Runtime.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\Microsoft.Web.WebView2.Core.Projection.dll

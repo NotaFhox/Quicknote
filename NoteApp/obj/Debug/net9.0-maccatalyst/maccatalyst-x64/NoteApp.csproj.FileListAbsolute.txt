@@ -1,10 +1,18 @@
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\NoteApp.runtimeconfig.json
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\NoteApp.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\NoteApp.pdb
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Data.Sqlite.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.EntityFrameworkCore.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.EntityFrameworkCore.Sqlite.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Caching.Memory.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Configuration.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.DependencyModel.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Logging.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Logging.Debug.dll
@@ -15,6 +23,10 @@ C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccataly
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Maui.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Maui.Essentials.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.Maui.Graphics.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\SQLite-net.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\SQLitePCLRaw.batteries_v2.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\SQLitePCLRaw.core.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\SQLitePCLRaw.provider.e_sqlite3.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\ar\Microsoft.Maui.Controls.resources.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\ca\Microsoft.Maui.Controls.resources.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\cs\Microsoft.Maui.Controls.resources.dll
@@ -49,6 +61,7 @@ C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccataly
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\zh-HK\Microsoft.Maui.Controls.resources.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\zh-Hans\Microsoft.Maui.Controls.resources.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\zh-Hant\Microsoft.Maui.Controls.resources.dll
+C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\libe_sqlite3.dylib
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.CSharp.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.VisualBasic.Core.dll
 C:\Users\Moka\Documents\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\Microsoft.VisualBasic.dll

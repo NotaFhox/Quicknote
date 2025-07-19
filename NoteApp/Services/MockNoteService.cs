@@ -60,5 +60,48 @@ namespace NoteApp.Services
             }
             return 0;
         }
+
+        public async Task<List<Note>> SearchNotesAsync(string searchTerm)
+        {
+            await Task.Delay(50);
+            
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return await GetNotesAsync();
+
+            searchTerm = searchTerm.ToLower();
+            
+            return _notes
+                .Where(n => n.Title.ToLower().Contains(searchTerm) || 
+                           n.Content.ToLower().Contains(searchTerm))
+                .OrderByDescending(n => n.DateModified)
+                .ToList();
+        }
+
+        public async Task<List<Note>> GetNotesByCategoryAsync(string category)
+        {
+            await Task.Delay(50);
+            
+            if (string.IsNullOrWhiteSpace(category) || category == "All")
+                return await GetNotesAsync();
+
+            return _notes
+                .Where(n => n.Category == category)
+                .OrderByDescending(n => n.DateModified)
+                .ToList();
+        }
+
+        public async Task<List<string>> GetCategoriesAsync()
+        {
+            await Task.Delay(50);
+            
+            var categories = _notes
+                .Select(n => n.Category)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToList();
+
+            categories.Insert(0, "All");
+            return categories;
+        }
     }
 }

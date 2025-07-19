@@ -1,4 +1,7 @@
-﻿using NoteApp.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using NoteApp.Data;
+using NoteApp.Services;
 using NoteApp.ViewModels;
 using NoteApp.Views;
 
@@ -16,8 +19,13 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
             });
 
+        // Configure database
+        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "notes.db");
+        builder.Services.AddDbContext<NoteDbContext>(options =>
+            options.UseSqlite($"Data Source={dbPath}"));
+
         // Register services
-        builder.Services.AddSingleton<INoteService, MockNoteService>();
+        builder.Services.AddScoped<INoteService, DatabaseNoteService>();
         
         // Register view models
         builder.Services.AddTransient<NotesViewModel>();
@@ -27,6 +35,19 @@ public static class MauiProgram
         builder.Services.AddTransient<NotesPage>();
         builder.Services.AddTransient<NoteDetailPage>();
 
-        return builder.Build();
+#if DEBUG
+        builder.Logging.AddDebug();
+#endif
+
+        var app = builder.Build();
+
+        // Initialize database
+        using (var scope = app.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<NoteDbContext>();
+            context.Database.EnsureCreated();
+        }
+
+        return app;
     }
 }
