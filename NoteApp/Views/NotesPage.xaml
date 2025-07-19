@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NoteApp.Views.NotesPage"
+             x:DataType="viewModels:NotesViewModel"
+             xmlns:viewModels="clr-namespace:NoteApp.ViewModels"
+             xmlns:models="clr-namespace:NoteApp.Models"
+             Title="{Binding Title}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Notes List -->
+        <CollectionView Grid.Row="0" 
+                        ItemsSource="{Binding Notes}"
+                        SelectionMode="None"
+                        Margin="10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Note">
+                    <Grid Padding="15" Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Note Content -->
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Text="{Binding Title}"
+                               FontSize="18"
+                               FontAttributes="Bold" />
+                        
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Text="{Binding Content}"
+                               MaxLines="2"
+                               LineBreakMode="TailTruncation"
+                               TextColor="Gray" />
+                        
+                        <Label Grid.Row="2" Grid.Column="0"
+                               Text="{Binding DateModified, StringFormat='{0:MMM dd, yyyy HH:mm}'}"
+                               FontSize="12"
+                               TextColor="Gray" />
+
+                        <!-- Delete Button -->
+                        <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+                                Text="×"
+                                FontSize="20"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                CornerRadius="20"
+                                BackgroundColor="Red"
+                                TextColor="White"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:NotesViewModel}}, Path=DeleteNoteCommand}"
+                                CommandParameter="{Binding .}" />
+
+                        <!-- Tap Gesture -->
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:NotesViewModel}}, Path=SelectNoteCommand}"
+                                                  CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+
+                        <!-- Card Style -->
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="White" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="LightBlue" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Add Note Button -->
+        <Button Grid.Row="1"
+                Text="+ Add Note"
+                FontSize="18"
+                BackgroundColor="DodgerBlue"
+                TextColor="White"
+                HeightRequest="50"
+                Margin="20,10"
+                Command="{Binding AddNoteCommand}" />
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator Grid.Row="0"
+                           IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center" />
+    </Grid>
+</ContentPage>
