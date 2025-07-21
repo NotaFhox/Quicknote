@@ -15,7 +15,7 @@ namespace NoteApp.Services
 
         public async Task<List<Note>> GetNotesAsync()
         {
-            await Task.Delay(100); // Simulate async operation
+            await Task.Delay(100); 
             return _notes.OrderByDescending(n => n.DateModified).ToList();
         }
 
@@ -42,6 +42,8 @@ namespace NoteApp.Services
                 {
                     existingNote.Title = note.Title;
                     existingNote.Content = note.Content;
+                    existingNote.Category = note.Category;
+                    existingNote.Tags = note.Tags;
                     existingNote.DateModified = DateTime.Now;
                 }
             }
@@ -72,7 +74,9 @@ namespace NoteApp.Services
             
             return _notes
                 .Where(n => n.Title.ToLower().Contains(searchTerm) || 
-                           n.Content.ToLower().Contains(searchTerm))
+                           n.Content.ToLower().Contains(searchTerm) ||
+                           n.Category.ToLower().Contains(searchTerm) ||
+                           n.Tags.ToLower().Contains(searchTerm))
                 .OrderByDescending(n => n.DateModified)
                 .ToList();
         }
@@ -102,6 +106,45 @@ namespace NoteApp.Services
 
             categories.Insert(0, "All");
             return categories;
+        }
+
+        
+        public async Task<int> DeleteMultipleNotesAsync(IEnumerable<Note> notes)
+        {
+            ArgumentNullException.ThrowIfNull(notes);
+            
+            await Task.Delay(100); 
+            
+            var noteList = notes.ToList();
+            var deletedCount = 0;
+            
+            foreach (var note in noteList)
+            {
+                var existingNote = _notes.FirstOrDefault(n => n.Id == note.Id);
+                if (existingNote != null)
+                {
+                    _notes.Remove(existingNote);
+                    deletedCount++;
+                }
+            }
+            
+            return deletedCount;
+        }
+
+        
+        public async Task<bool> IsHealthyAsync()
+        {
+            await Task.Delay(10); 
+            
+            try
+            {
+                
+                return _notes != null;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
