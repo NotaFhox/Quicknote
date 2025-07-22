@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NoteApp</id>
+    <version>1.0.0</version>
+    <authors>NoteApp</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="97468c79c45e2ba5c997ddec463adb3f45c42d38" />
+    <dependencies>
+      <group targetFramework="net9.0-android35.0">
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Sqlite" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Tools" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging.Debug" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Maui.Controls" version="9.0.10" exclude="Build,Analyzers" />
+        <dependency id="SQLitePCLRaw.bundle_green" version="2.1.10" exclude="Build,Analyzers" />
+        <dependency id="sqlite-net-pcl" version="1.9.172" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net9.0-ios18.5">
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Sqlite" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Tools" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging.Debug" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Maui.Controls" version="9.0.10" exclude="Build,Analyzers" />
+        <dependency id="SQLitePCLRaw.bundle_green" version="2.1.10" exclude="Build,Analyzers" />
+        <dependency id="sqlite-net-pcl" version="1.9.172" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net9.0-maccatalyst18.5">
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Sqlite" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Tools" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging.Debug" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Maui.Controls" version="9.0.10" exclude="Build,Analyzers" />
+        <dependency id="SQLitePCLRaw.bundle_green" version="2.1.10" exclude="Build,Analyzers" />
+        <dependency id="sqlite-net-pcl" version="1.9.172" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net9.0-windows10.0.19041">
+        <dependency id="Microsoft.EntityFrameworkCore.Design" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Sqlite" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Tools" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging.Debug" version="9.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Maui.Controls" version="9.0.10" exclude="Build,Analyzers" />
+        <dependency id="SQLitePCLRaw.bundle_green" version="2.1.10" exclude="Build,Analyzers" />
+        <dependency id="sqlite-net-pcl" version="1.9.172" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-android\NoteApp.runtimeconfig.json" target="lib\net9.0-android35.0\NoteApp.runtimeconfig.json" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-android\NoteApp.dll" target="lib\net9.0-android35.0\NoteApp.dll" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-android\NoteApp.xml" target="lib\net9.0-android35.0\NoteApp.xml" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-ios\iossimulator-x64\NoteApp.runtimeconfig.json" target="lib\net9.0-ios18.5\NoteApp.runtimeconfig.json" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-ios\iossimulator-x64\NoteApp.dll" target="lib\net9.0-ios18.5\NoteApp.dll" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\NoteApp.runtimeconfig.json" target="lib\net9.0-maccatalyst18.5\NoteApp.runtimeconfig.json" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-maccatalyst\maccatalyst-x64\NoteApp.dll" target="lib\net9.0-maccatalyst18.5\NoteApp.dll" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\NoteApp.runtimeconfig.json" target="lib\net9.0-windows10.0.19041\NoteApp.runtimeconfig.json" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\NoteApp.dll" target="lib\net9.0-windows10.0.19041\NoteApp.dll" />
+    <file src="F:\Backups\Quicknote\Quicknote\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\resources.pri" target="lib\net9.0-windows10.0.19041\resources.pri" />
+  </files>
+</package>

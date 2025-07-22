@@ -5,7 +5,7 @@
              x:DataType="viewModels:NotesViewModel"
              xmlns:viewModels="clr-namespace:NoteApp.ViewModels"
              xmlns:models="clr-namespace:NoteApp.Models"
-             Title="{Binding Title}"
+             Title=""
              BackgroundColor="{StaticResource WindowsBeige}">
 
     <Grid>
@@ -15,16 +15,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        
         <Frame Grid.Row="0" 
-               BackgroundColor="{StaticResource ButtonFace}" 
-               BorderColor="{StaticResource ControlDark}"
-               CornerRadius="0"
-               HasShadow="False"
-               Padding="12">
+               Style="{StaticResource HeaderFrame}"
+               Margin="0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -33,33 +28,30 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 
-               
-                <Label Grid.Row="0" Grid.ColumnSpan="2"
-                       Text="My Notes"
-                       Style="{StaticResource SubHeadline}"
-                       HorizontalTextAlignment="Start"
-                       Margin="0,0,0,8" />
-                
-                
-                <Frame Grid.Row="1" Grid.Column="0"
+                <Frame Grid.Row="0" Grid.Column="0"
                        Style="{StaticResource ContentFrame}"
+                       BackgroundColor="{StaticResource SearchBackground}"
                        Margin="0,0,8,4">
-                    <SearchBar Placeholder="Search notes..."
+                    <SearchBar Placeholder="Search your notes..."
                                Text="{Binding SearchText}"
                                SearchCommand="{Binding SearchCommand}"
-                               BackgroundColor="Transparent" />
+                               BackgroundColor="Transparent"
+                               FontFamily="Courier"
+                               FontSize="12" />
                 </Frame>
                 
-                <Button Grid.Row="1" Grid.Column="1"
+                <Button Grid.Row="0" Grid.Column="1"
                         Text="Clear"
                         Command="{Binding ClearSearchCommand}"
                         IsVisible="{Binding SearchText, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
                         WidthRequest="60"
-                        VerticalOptions="Fill" />
+                        VerticalOptions="Fill"
+                        FontFamily="Courier"
+                        FontSize="11" />
                 
-                
-                <Frame Grid.Row="2" Grid.ColumnSpan="2"
+                <Frame Grid.Row="1" Grid.ColumnSpan="2"
                        Style="{StaticResource ContentFrame}"
+                       BackgroundColor="{StaticResource PaperWhite}"
                        Margin="0,4,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -68,56 +60,68 @@
                         </Grid.ColumnDefinitions>
                         
                         <Label Grid.Column="0" 
-                               Text="Category:" 
+                               Text="Filter by Category:" 
                                VerticalOptions="Center"
                                Margin="0,0,8,0"
-                               FontAttributes="Bold" />
+                               FontAttributes="Bold"
+                               FontFamily="Courier"
+                               FontSize="11" />
                         
                         <Picker Grid.Column="1"
                                 Title="All Categories"
                                 ItemsSource="{Binding Categories}"
                                 SelectedItem="{Binding SelectedCategory}"
-                                BackgroundColor="Transparent" />
+                                BackgroundColor="Transparent"
+                                FontFamily="Courier"
+                                FontSize="11" />
                     </Grid>
                 </Frame>
             </Grid>
         </Frame>
 
-         
         <ScrollView Grid.Row="1" 
-                    BackgroundColor="{StaticResource White}"
+                    BackgroundColor="{StaticResource ContentWhite}"
                     Margin="8">
             <StackLayout Spacing="8" Padding="8">
                 <CollectionView ItemsSource="{Binding Notes}"
                                 SelectionMode="None"
                                 BackgroundColor="Transparent">
                     <CollectionView.EmptyView>
-                        <Frame Style="{StaticResource ContentFrame}"
+                        <Frame Style="{StaticResource PaperFrame}"
                                Margin="20"
-                               Padding="40">
+                               Padding="40"
+                               BackgroundColor="{StaticResource PaperWhite}">
                             <StackLayout VerticalOptions="Center" 
                                        HorizontalOptions="Center" 
                                        Spacing="16">
-                                <Label Text="📝" 
-                                       FontSize="48" 
-                                       HorizontalTextAlignment="Center" />
                                 <Label Text="No notes found" 
                                        FontSize="18" 
                                        FontAttributes="Bold"
                                        TextColor="{StaticResource Gray600}"
-                                       HorizontalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center"
+                                       FontFamily="Courier" />
                                 <Label Text="Click the 'Add Note' button below to create your first note" 
                                        TextColor="{StaticResource Gray600}" 
-                                       HorizontalTextAlignment="Center" />
+                                       HorizontalTextAlignment="Center"
+                                       Margin="0,0,0,8"
+                                       FontFamily="Courier"
+                                       FontSize="12" />
+                                <Button Text="Create Your First Note"
+                                        Style="{StaticResource AccentButton}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:NotesViewModel}}, Path=AddNoteCommand}"
+                                        HorizontalOptions="Center"
+                                        FontFamily="Courier"
+                                        FontSize="12" />
                             </StackLayout>
                         </Frame>
                     </CollectionView.EmptyView>
                     
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:Note">
-                            <Frame Style="{StaticResource ContentFrame}" 
-                                   Margin="0,0,0,4"
-                                   Padding="12">
+                            <Frame Style="{StaticResource PaperFrame}" 
+                                   Margin="0,0,0,8"
+                                   BackgroundColor="{StaticResource PaperWhite}"
+                                   Padding="16">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -130,70 +134,80 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
-                                     
                                     <Label Grid.Row="0" Grid.Column="0"
                                            Text="{Binding Title}"
-                                           FontSize="16"
+                                           FontSize="14"
                                            FontAttributes="Bold"
                                            TextColor="{StaticResource Black}"
-                                           Margin="0,0,0,4" />
+                                           Margin="0,0,8,6"
+                                           FontFamily="Courier"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="1" />
                                     
-                                     
                                     <Label Grid.Row="1" Grid.Column="0"
-                                           Text="{Binding Content}"
-                                           MaxLines="2"
+                                           Text="{Binding ContentPreview}"
+                                           MaxLines="3"
                                            LineBreakMode="TailTruncation"
                                            TextColor="{StaticResource Gray700}"
-                                           FontSize="14"
-                                           Margin="0,0,0,8" />
+                                           FontSize="12"
+                                           Margin="0,0,8,8"
+                                           FontFamily="Courier" />
                                     
-                                     
                                     <Frame Grid.Row="2" Grid.Column="0"
-                                           BackgroundColor="{StaticResource Secondary}"
+                                           BackgroundColor="{StaticResource CategoryBackground}"
                                            BorderColor="{StaticResource Primary}"
                                            CornerRadius="0"
-                                           Padding="6,2"
-                                           Margin="0,0,0,4"
+                                           Padding="6,3"
+                                           Margin="0,0,8,6"
                                            HorizontalOptions="Start"
                                            HasShadow="False">
                                         <Label Text="{Binding Category}"
                                                Style="{StaticResource CategoryLabel}"
-                                               BackgroundColor="Transparent"
-                                               Padding="0" />
+                                               FontSize="10"
+                                               FontFamily="Courier" />
                                     </Frame>
                                     
-                                    
-                                    <Label Grid.Row="3" Grid.Column="0"
-                                           Text="{Binding DateModified, StringFormat='Modified: {0:dd MMM yyyy HH:mm}'}"
-                                           Style="{StaticResource MetadataLabel}" />
-
-                                     
-                                    <StackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"
+                                    <StackLayout Grid.Row="3" Grid.Column="0"
                                                Orientation="Vertical"
-                                               Spacing="4"
-                                               VerticalOptions="Center">
-                                        
-                                        <Button Text="Edit"
-                                                FontSize="12"
-                                                WidthRequest="50"
-                                                HeightRequest="24"
-                                                Padding="4,2"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:NotesViewModel}}, Path=SelectNoteCommand}"
-                                                CommandParameter="{Binding .}" />
-                                        
-                                        <Button Text="Delete"
-                                                FontSize="12"
-                                                WidthRequest="50"
-                                                HeightRequest="24"
-                                                Padding="4,2"
-                                                BackgroundColor="{StaticResource ClassicRed}"
-                                                TextColor="{StaticResource White}"
-                                                BorderColor="{StaticResource ControlDark}"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:NotesViewModel}}, Path=DeleteNoteCommand}"
-                                                CommandParameter="{Binding .}" />
+                                               Spacing="2"
+                                               Margin="0,0,8,0">
+                                        <Label Text="{Binding TimeAgo}"
+                                               Style="{StaticResource MetadataLabel}"
+                                               FontSize="10"
+                                               FontFamily="Courier" />
+                                        <Label Text="{Binding DateModified, StringFormat='Modified: {0:dd MMM yyyy HH:mm}'}"
+                                               Style="{StaticResource MetadataLabel}"
+                                               FontSize="10"
+                                               FontFamily="Courier" />
                                     </StackLayout>
 
-                                     
+                                    <StackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"
+                                               Orientation="Vertical"
+                                               Spacing="8"
+                                               VerticalOptions="Center"
+                                               Margin="8,0,0,0">
+                                        
+                                        <Button Text="Edit"
+                                                FontSize="10"
+                                                WidthRequest="50"
+                                                HeightRequest="26"
+                                                Padding="4,2"
+                                                BackgroundColor="{StaticResource ButtonFace}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:NotesViewModel}}, Path=SelectNoteCommand}"
+                                                CommandParameter="{Binding .}"
+                                                FontFamily="Courier" />
+                                        
+                                        <Button Text="Delete"
+                                                Style="{StaticResource DangerButton}"
+                                                FontSize="10"
+                                                WidthRequest="50"
+                                                HeightRequest="26"
+                                                Padding="4,2"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:NotesViewModel}}, Path=DeleteNoteCommand}"
+                                                CommandParameter="{Binding .}"
+                                                FontFamily="Courier" />
+                                    </StackLayout>
+
                                     <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:NotesViewModel}}, Path=SelectNoteCommand}"
                                                               CommandParameter="{Binding .}" />
@@ -206,52 +220,56 @@
             </StackLayout>
         </ScrollView>
 
-         
         <Frame Grid.Row="2"
-               BackgroundColor="{StaticResource ButtonFace}"
-               BorderColor="{StaticResource ControlDark}"
-               CornerRadius="0"
-               HasShadow="False"
-               Padding="12,8">
+               Style="{StaticResource HeaderFrame}"
+               Margin="0"
+               Padding="16,10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 
-                 
-                <Label Grid.Column="0"
-                       Text="{Binding Notes.Count, StringFormat='{0} notes'}"
-                       VerticalOptions="Center"
-                       TextColor="{StaticResource Gray600}"
-                       FontSize="12" />
+                <StackLayout Grid.Column="0"
+                           Orientation="Horizontal"
+                           VerticalOptions="Center"
+                           Spacing="8">
+                    <Label Text="{Binding Notes.Count, StringFormat='Total notes: {0}'}"
+                           VerticalOptions="Center"
+                           TextColor="{StaticResource BeigeText}"
+                           FontSize="11"
+                           FontAttributes="Italic"
+                           FontFamily="Courier" />
+                </StackLayout>
                 
-                 
                 <Button Grid.Column="1"
                         Text="Add Note"
                         Style="{StaticResource AccentButton}"
-                        FontSize="14"
-                        WidthRequest="100"
+                        FontSize="12"
+                        WidthRequest="90"
                         HeightRequest="32"
-                        Command="{Binding AddNoteCommand}" />
+                        Command="{Binding AddNoteCommand}"
+                        FontFamily="Courier" />
             </Grid>
         </Frame>
 
-         
         <Frame Grid.Row="1"
                IsVisible="{Binding IsBusy}"
-               BackgroundColor="{StaticResource ButtonFace}"
-               BorderColor="{StaticResource ControlDark}"
-               CornerRadius="0"
+               Style="{StaticResource ContentFrame}"
+               BackgroundColor="{StaticResource PaperWhite}"
                VerticalOptions="Center"
                HorizontalOptions="Center"
-               Padding="20">
+               Padding="24">
             <StackLayout Orientation="Horizontal" Spacing="12">
                 <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                 VerticalOptions="Center" />
-                <Label Text="Loading notes..."
+                                 VerticalOptions="Center"
+                                 Color="{StaticResource AccentBlue}" />
+                <Label Text="Loading your notes..."
                        VerticalOptions="Center"
-                       TextColor="{StaticResource Black}" />
+                       TextColor="{StaticResource Black}"
+                       FontAttributes="Italic"
+                       FontFamily="Courier"
+                       FontSize="12" />
             </StackLayout>
         </Frame>
     </Grid>

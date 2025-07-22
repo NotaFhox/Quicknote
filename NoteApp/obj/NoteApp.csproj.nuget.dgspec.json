@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Backups\\Quicknote - Copy\\Quicknote\\NoteApp\\NoteApp.csproj": {}
+    "F:\\Backups\\Quicknote\\Quicknote\\NoteApp\\NoteApp.csproj": {}
   },
   "projects": {
-    "F:\\Backups\\Quicknote - Copy\\Quicknote\\NoteApp\\NoteApp.csproj": {
+    "F:\\Backups\\Quicknote\\Quicknote\\NoteApp\\NoteApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Backups\\Quicknote - Copy\\Quicknote\\NoteApp\\NoteApp.csproj",
+        "projectUniqueName": "F:\\Backups\\Quicknote\\Quicknote\\NoteApp\\NoteApp.csproj",
         "projectName": "NoteApp",
-        "projectPath": "F:\\Backups\\Quicknote - Copy\\Quicknote\\NoteApp\\NoteApp.csproj",
+        "projectPath": "F:\\Backups\\Quicknote\\Quicknote\\NoteApp\\NoteApp.csproj",
         "packagesPath": "C:\\Users\\Moka\\.nuget\\packages\\",
-        "outputPath": "F:\\Backups\\Quicknote - Copy\\Quicknote\\NoteApp\\obj\\",
+        "outputPath": "F:\\Backups\\Quicknote\\Quicknote\\NoteApp\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [

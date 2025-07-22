@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QtdwlzA9X3Y=",
+  "dgSpecHash": "Ng3fhctZvyg=",
   "success": true,
-  "projectFilePath": "F:\\Backups\\Quicknote - Copy\\Quicknote\\NoteApp\\NoteApp.csproj",
+  "projectFilePath": "F:\\Backups\\Quicknote\\Quicknote\\NoteApp\\NoteApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Moka\\.nuget\\packages\\googlegson\\2.11.0.3\\googlegson.2.11.0.3.nupkg.sha512",
     "C:\\Users\\Moka\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

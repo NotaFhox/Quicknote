@@ -4,55 +4,59 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- 90s Inspired Color Palette -->
-    
-    <!-- Primary Beige Tones -->
-    <Color x:Key="Primary">#D2B48C</Color><!-- Sandy Brown -->
-    <Color x:Key="PrimaryDark">#C19A6B</Color><!-- Darker Tan -->
+    <Color x:Key="Primary">#E6DDD4</Color>
+    <Color x:Key="PrimaryDark">#D2C7B8</Color>
     <Color x:Key="PrimaryDarkText">#2F2F2F</Color>
-    <Color x:Key="Secondary">#F5F5DC</Color><!-- Beige -->
+    <Color x:Key="Secondary">#F8F6F0</Color>
     <Color x:Key="SecondaryDarkText">#8B7355</Color>
-    <Color x:Key="Tertiary">#DEB887</Color><!-- Burlywood -->
+    <Color x:Key="Tertiary">#EFE7DC</Color>
 
-    <!-- Classic 90s Interface Colors -->
-    <Color x:Key="WindowsBeige">#F0F0E0</Color><!-- Classic Windows 95 beige -->
-    <Color x:Key="ButtonFace">#E6E6E0</Color><!-- Button face color -->
-    <Color x:Key="ButtonShadow">#808080</Color><!-- Button shadow -->
-    <Color x:Key="ButtonHighlight">#FFFFFF</Color><!-- Button highlight -->
-    <Color x:Key="ControlDark">#A0A0A0</Color><!-- Control dark edge -->
-    <Color x:Key="ControlLight">#F8F8F0</Color><!-- Control light edge -->
+    <Color x:Key="WindowsBeige">#F5F3ED</Color>
+    <Color x:Key="ButtonFace">#EFEAE0</Color>
+    <Color x:Key="ButtonShadow">#C4B8A8</Color>
+    <Color x:Key="ButtonHighlight">#FEFCF8</Color>
+    <Color x:Key="ControlDark">#B8AC98</Color>
+    <Color x:Key="ControlLight">#FAF8F2</Color>
     
-    <!-- Text and Content -->
     <Color x:Key="White">#FFFFFF</Color>
-    <Color x:Key="Black">#000000</Color>
-    <Color x:Key="ClassicBlue">#000080</Color><!-- Navy blue for links/accents -->
-    <Color x:Key="ClassicRed">#800000</Color><!-- Maroon for warnings -->
+    <Color x:Key="ContentWhite">#FEFCFA</Color>
+    <Color x:Key="PaperWhite">#FFFEF9</Color>
     <Color x:Key="OffWhite">#FEFEFE</Color>
-    <Color x:Key="WarmWhite">#FFF8DC</Color><!-- Cornsilk -->
+    <Color x:Key="WarmWhite">#FFF9F0</Color>
 
-    <!-- Greys in warmer tones -->
-    <Color x:Key="Gray100">#F5F5F0</Color>
-    <Color x:Key="Gray200">#E8E8E0</Color>
-    <Color x:Key="Gray300">#D0D0C8</Color>
-    <Color x:Key="Gray400">#B8B8B0</Color>
-    <Color x:Key="Gray500">#A0A098</Color>
-    <Color x:Key="Gray600">#888880</Color>
-    <Color x:Key="Gray700">#707068</Color>
-    <Color x:Key="Gray800">#585850</Color>
-    <Color x:Key="Gray900">#404038</Color>
-    <Color x:Key="Gray950">#282820</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="ClassicBlue">#2B4C85</Color>
+    <Color x:Key="ClassicRed">#A0504A</Color>
+    <Color x:Key="BeigeText">#6B5B47</Color>
 
-    <!-- Accent Colors -->
-    <Color x:Key="AccentBlue">#4169E1</Color><!-- Royal Blue -->
-    <Color x:Key="AccentGreen">#228B22</Color><!-- Forest Green -->
+    <Color x:Key="Gray100">#F7F5F0</Color>
+    <Color x:Key="Gray200">#EFEBE4</Color>
+    <Color x:Key="Gray300">#E0D8CC</Color>
+    <Color x:Key="Gray400">#CFC5B8</Color>
+    <Color x:Key="Gray500">#B8AC9C</Color>
+    <Color x:Key="Gray600">#A0947F</Color>
+    <Color x:Key="Gray700">#877B68</Color>
+    <Color x:Key="Gray800">#6B5F4C</Color>
+    <Color x:Key="Gray900">#4A3F32</Color>
+    <Color x:Key="Gray950">#2E251C</Color>
+
+    <Color x:Key="AccentBlue">#5A7BA8</Color>
+    <Color x:Key="AccentGreen">#6B8E5A</Color>
+    <Color x:Key="AccentBrown">#8B6914</Color>
     
-    <!-- Brushes -->
+    <Color x:Key="CategoryBackground">#F2EDE5</Color>
+    <Color x:Key="MetadataBackground">#EAE2D6</Color>
+    <Color x:Key="SearchBackground">#FEFEFC</Color>
+    <Color x:Key="NoteContentBackground">#FFFFFE</Color>
+    
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
     <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+    <SolidColorBrush x:Key="ContentWhiteBrush" Color="{StaticResource ContentWhite}"/>
+    <SolidColorBrush x:Key="PaperWhiteBrush" Color="{StaticResource PaperWhite}"/>
     <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
-    <SolidColorBrush x:Key="WindowsBeigebrush" Color="{StaticResource WindowsBeige}"/>
+    <SolidColorBrush x:Key="WindowsBeigeBrush" Color="{StaticResource WindowsBeige}"/>
     <SolidColorBrush x:Key="ButtonFaceBrush" Color="{StaticResource ButtonFace}"/>
 
     <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
@@ -65,4 +69,10 @@
     <SolidColorBrush x:Key="Gray800Brush" Color="{StaticResource Gray800}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <SolidColorBrush x:Key="CategoryBackgroundBrush" Color="{StaticResource CategoryBackground}"/>
+    <SolidColorBrush x:Key="MetadataBackgroundBrush" Color="{StaticResource MetadataBackground}"/>
+    <SolidColorBrush x:Key="SearchBackgroundBrush" Color="{StaticResource SearchBackground}"/>
+    <SolidColorBrush x:Key="NoteContentBackgroundBrush" Color="{StaticResource NoteContentBackground}"/>
+
 </ResourceDictionary>

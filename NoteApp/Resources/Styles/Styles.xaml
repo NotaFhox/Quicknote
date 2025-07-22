@@ -5,33 +5,33 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Style TargetType="ActivityIndicator">
-        <Setter Property="Color" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="Color" Value="{StaticResource AccentBlue}" />
     </Style>
 
     <Style TargetType="IndicatorView">
         <Setter Property="IndicatorColor" Value="{StaticResource Gray400}"/>
-        <Setter Property="SelectedIndicatorColor" Value="{StaticResource ClassicBlue}"/>
+        <Setter Property="SelectedIndicatorColor" Value="{StaticResource AccentBlue}"/>
     </Style>
 
-   
+    <!-- Enhanced Border Style -->
     <Style TargetType="Border">
         <Setter Property="Stroke" Value="{StaticResource ControlDark}" />
         <Setter Property="StrokeShape" Value="Rectangle"/>
-        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="StrokeThickness" Value="1"/>
         <Setter Property="BackgroundColor" Value="{StaticResource ButtonFace}"/>
     </Style>
 
     <Style TargetType="BoxView">
-        <Setter Property="BackgroundColor" Value="{StaticResource Gray600}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Gray500}" />
     </Style>
 
-    
+    <!-- Enhanced Button Style -->
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="BackgroundColor" Value="{StaticResource ButtonFace}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="BorderWidth" Value="2"/>
+        <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="BorderColor" Value="{StaticResource ControlDark}"/>
         <Setter Property="CornerRadius" Value="0"/>
         <Setter Property="Padding" Value="12,6"/>
@@ -39,9 +39,9 @@
         <Setter Property="MinimumWidthRequest" Value="60"/>
         <Setter Property="Shadow">
             <Shadow Brush="{StaticResource ButtonShadow}"
-                    Offset="2,2"
+                    Offset="1,1"
                     Radius="0"
-                    Opacity="0.8"/>
+                    Opacity="0.6"/>
         </Setter>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -50,18 +50,18 @@
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{StaticResource Gray500}" />
-                            <Setter Property="BackgroundColor" Value="{StaticResource Gray300}" />
-                            <Setter Property="BorderColor" Value="{StaticResource Gray400}"/>
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray200}" />
+                            <Setter Property="BorderColor" Value="{StaticResource Gray300}"/>
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Pressed">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{StaticResource Gray400}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray300}" />
                             <Setter Property="Shadow">
                                 <Shadow Brush="{StaticResource ButtonShadow}"
-                                        Offset="1,1"
+                                        Offset="0,0"
                                         Radius="0"
-                                        Opacity="0.6"/>
+                                        Opacity="0.8"/>
                             </Setter>
                         </VisualState.Setters>
                     </VisualState>
@@ -70,54 +70,85 @@
         </Setter>
     </Style>
 
-   
+    <!-- Enhanced Accent Button -->
     <Style TargetType="Button" x:Key="AccentButton">
         <Setter Property="TextColor" Value="{StaticResource White}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource AccentBlue}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="BorderWidth" Value="2"/>
+        <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="BorderColor" Value="{StaticResource ControlDark}"/>
         <Setter Property="CornerRadius" Value="0"/>
         <Setter Property="Padding" Value="12,6"/>
         <Setter Property="MinimumHeightRequest" Value="32"/>
         <Setter Property="Shadow">
             <Shadow Brush="{StaticResource ButtonShadow}"
-                    Offset="2,2"
+                    Offset="1,1"
                     Radius="0"
-                    Opacity="0.8"/>
+                    Opacity="0.6"/>
+        </Setter>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource ClassicBlue}" />
+                            <Setter Property="Shadow">
+                                <Shadow Brush="{StaticResource ButtonShadow}"
+                                        Offset="0,0"
+                                        Radius="0"
+                                        Opacity="0.8"/>
+                            </Setter>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
         </Setter>
     </Style>
 
+    <!-- Danger Button for Delete Actions -->
+    <Style TargetType="Button" x:Key="DangerButton">
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ClassicRed}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="BorderColor" Value="{StaticResource ControlDark}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+
     <Style TargetType="CheckBox">
-        <Setter Property="Color" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="Color" Value="{StaticResource AccentBlue}" />
         <Setter Property="MinimumHeightRequest" Value="24"/>
         <Setter Property="MinimumWidthRequest" Value="24"/>
     </Style>
 
     <Style TargetType="DatePicker">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource ButtonFace}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource PaperWhite}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="MinimumHeightRequest" Value="32"/>
     </Style>
 
-    
+    <!-- Enhanced Editor Style -->
     <Style TargetType="Editor">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource NoteContentBackground}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
-        <Setter Property="MinimumHeightRequest" Value="80"/>
+        <Setter Property="MinimumHeightRequest" Value="120"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
     </Style>
 
+    <!-- Enhanced Entry Style -->
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SearchBackground}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
@@ -125,7 +156,7 @@
         <Setter Property="MinimumWidthRequest" Value="44"/>
     </Style>
 
-    
+    <!-- Enhanced Frame Styles -->
     <Style TargetType="Frame">
         <Setter Property="HasShadow" Value="True" />
         <Setter Property="BorderColor" Value="{StaticResource ControlDark}" />
@@ -134,18 +165,42 @@
         <Setter Property="Padding" Value="8"/>
         <Setter Property="Shadow">
             <Shadow Brush="{StaticResource ButtonShadow}"
-                    Offset="2,2"
+                    Offset="1,1"
                     Radius="1"
-                    Opacity="0.5"/>
+                    Opacity="0.4"/>
         </Setter>
     </Style>
 
-   
+    <!-- Content Frame for Note Content -->
     <Style TargetType="Frame" x:Key="ContentFrame">
         <Setter Property="HasShadow" Value="False" />
         <Setter Property="BorderColor" Value="{StaticResource ControlDark}" />
         <Setter Property="CornerRadius" Value="0" />
-        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ContentWhite}" />
+        <Setter Property="Padding" Value="12"/>
+    </Style>
+
+    <!-- Paper Frame for Note Items -->
+    <Style TargetType="Frame" x:Key="PaperFrame">
+        <Setter Property="HasShadow" Value="True" />
+        <Setter Property="BorderColor" Value="{StaticResource ControlDark}" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="BackgroundColor" Value="{StaticResource PaperWhite}" />
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Shadow">
+            <Shadow Brush="{StaticResource ButtonShadow}"
+                    Offset="1,1"
+                    Radius="2"
+                    Opacity="0.3"/>
+        </Setter>
+    </Style>
+
+    <!-- Header Frame -->
+    <Style TargetType="Frame" x:Key="HeaderFrame">
+        <Setter Property="HasShadow" Value="False" />
+        <Setter Property="BorderColor" Value="{StaticResource ControlDark}" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Secondary}" />
         <Setter Property="Padding" Value="12"/>
     </Style>
 
@@ -170,9 +225,9 @@
         <Setter Property="TextColor" Value="{StaticResource Black}" />
     </Style>
 
-  
+    <!-- Enhanced Label Styles -->
     <Style TargetType="Label" x:Key="Headline">
-        <Setter Property="TextColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="TextColor" Value="{StaticResource AccentBlue}" />
         <Setter Property="FontSize" Value="24" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="HorizontalOptions" Value="Center" />
@@ -183,20 +238,20 @@
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="FontSize" Value="18" />
         <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="HorizontalTextAlignment" Value="Start" />
     </Style>
 
-    
+    <!-- Enhanced Category Label -->
     <Style TargetType="Label" x:Key="CategoryLabel">
-        <Setter Property="TextColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="TextColor" Value="{StaticResource BeigeText}" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="BackgroundColor" Value="{StaticResource Secondary}" />
-        <Setter Property="Padding" Value="4,2" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
     </Style>
 
-    
+    <!-- Enhanced Metadata Label -->
     <Style TargetType="Label" x:Key="MetadataLabel">
         <Setter Property="TextColor" Value="{StaticResource Gray600}" />
         <Setter Property="FontSize" Value="12" />
@@ -204,22 +259,22 @@
     </Style>
 
     <Style TargetType="ListView">
-        <Setter Property="SeparatorColor" Value="{StaticResource ControlDark}" />
+        <Setter Property="SeparatorColor" Value="{StaticResource Gray300}" />
         <Setter Property="BackgroundColor" Value="{StaticResource WindowsBeige}" />
     </Style>
 
-   
+    <!-- Enhanced Picker Style -->
     <Style TargetType="Picker">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="TitleColor" Value="{StaticResource Gray600}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource ButtonFace}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource PaperWhite}" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14" />
         <Setter Property="MinimumHeightRequest" Value="32"/>
     </Style>
 
     <Style TargetType="ProgressBar">
-        <Setter Property="ProgressColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="ProgressColor" Value="{StaticResource AccentBlue}" />
     </Style>
 
     <Style TargetType="RadioButton">
@@ -232,53 +287,53 @@
     </Style>
 
     <Style TargetType="RefreshView">
-        <Setter Property="RefreshColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="RefreshColor" Value="{StaticResource AccentBlue}" />
     </Style>
 
-    
+    <!-- Enhanced SearchBar Style -->
     <Style TargetType="SearchBar">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
-        <Setter Property="CancelButtonColor" Value="{StaticResource ClassicBlue}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource White}" />
+        <Setter Property="CancelButtonColor" Value="{StaticResource AccentBlue}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SearchBackground}" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="MinimumHeightRequest" Value="32"/>
     </Style>
 
     <Style TargetType="Shadow">
-        <Setter Property="Radius" Value="2" />
-        <Setter Property="Opacity" Value="0.4" />
+        <Setter Property="Radius" Value="1" />
+        <Setter Property="Opacity" Value="0.3" />
         <Setter Property="Brush" Value="{StaticResource ButtonShadow}" />
-        <Setter Property="Offset" Value="2,2" />
+        <Setter Property="Offset" Value="1,1" />
     </Style>
 
     <Style TargetType="Slider">
-        <Setter Property="MinimumTrackColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="MinimumTrackColor" Value="{StaticResource AccentBlue}" />
         <Setter Property="MaximumTrackColor" Value="{StaticResource Gray400}" />
-        <Setter Property="ThumbColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="ThumbColor" Value="{StaticResource AccentBlue}" />
     </Style>
 
     <Style TargetType="Switch">
-        <Setter Property="OnColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="OnColor" Value="{StaticResource AccentBlue}" />
         <Setter Property="ThumbColor" Value="{StaticResource White}" />
     </Style>
 
     <Style TargetType="TimePicker">
         <Setter Property="TextColor" Value="{StaticResource Black}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource ButtonFace}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource PaperWhite}"/>
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="MinimumHeightRequest" Value="32"/>
     </Style>
 
-    
+    <!-- Enhanced Page Style -->
     <Style TargetType="Page" ApplyToDerivedTypes="True">
         <Setter Property="Padding" Value="0"/>
         <Setter Property="BackgroundColor" Value="{StaticResource WindowsBeige}" />
     </Style>
 
-    
+    <!-- Enhanced Shell Style -->
     <Style TargetType="Shell" ApplyToDerivedTypes="True">
         <Setter Property="Shell.BackgroundColor" Value="{StaticResource ButtonFace}" />
         <Setter Property="Shell.ForegroundColor" Value="{StaticResource Black}" />
@@ -302,7 +357,7 @@
         <Setter Property="BarBackgroundColor" Value="{StaticResource ButtonFace}" />
         <Setter Property="BarTextColor" Value="{StaticResource Black}" />
         <Setter Property="UnselectedTabColor" Value="{StaticResource Gray500}" />
-        <Setter Property="SelectedTabColor" Value="{StaticResource ClassicBlue}" />
+        <Setter Property="SelectedTabColor" Value="{StaticResource AccentBlue}" />
     </Style>
 
 </ResourceDictionary>

@@ -9,31 +9,41 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Save" 
-                     Command="{Binding SaveCommand}"
-                     IconImageSource="💾" />
+                     Command="{Binding SaveCommand}" />
         <ToolbarItem Text="Back" 
-                     Command="{Binding BackCommand}"
-                     IconImageSource="⬅️" />
+                     Command="{Binding BackCommand}" />
     </ContentPage.ToolbarItems>
 
     <ScrollView Padding="8">
         <StackLayout Spacing="12">
             
-            
-            <Frame BackgroundColor="{StaticResource ButtonFace}"
-                   BorderColor="{StaticResource ControlDark}"
-                   CornerRadius="0"
-                   HasShadow="False"
-                   Padding="12">
-                <Label Text="Note Editor"
-                       Style="{StaticResource SubHeadline}"
-                       HorizontalTextAlignment="Start"
-                       Margin="0" />
+            <Frame Style="{StaticResource HeaderFrame}"
+                   Padding="16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Label Grid.Column="0"
+                           Text="Note Editor"
+                           Style="{StaticResource SubHeadline}"
+                           VerticalOptions="Center"
+                           FontFamily="Courier" />
+                    
+                    <Label Grid.Column="1"
+                           Text="{Binding Note.Id, StringFormat='#{0:D3}'}"
+                           TextColor="{StaticResource Gray600}"
+                           FontSize="11"
+                           FontFamily="Courier"
+                           VerticalOptions="Center"
+                           IsVisible="{Binding Note.Id, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
+                </Grid>
             </Frame>
 
-            
-            <Frame Style="{StaticResource ContentFrame}"
-                   Padding="16">
+            <Frame Style="{StaticResource PaperFrame}"
+                   BackgroundColor="{StaticResource PaperWhite}"
+                   Padding="20">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -44,36 +54,42 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    
-                    <StackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,12">
-                        <Label Text="Title:"
+                    <StackLayout Grid.Row="0" Spacing="6" Margin="0,0,0,16">
+                        <Label Text="Title"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource Black}" />
-                        <Frame BackgroundColor="{StaticResource White}"
+                               TextColor="{StaticResource Black}"
+                               FontSize="13"
+                               FontFamily="Courier" />
+                        <Frame BackgroundColor="{StaticResource SearchBackground}"
+                               BorderColor="{StaticResource ControlDark}"
+                               CornerRadius="0"
+                               HasShadow="False"
+                               Padding="12">
+                            <Entry Text="{Binding Note.Title}"
+                                   Placeholder="Enter a descriptive title for your note..."
+                                   FontSize="14"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource Black}"
+                                   FontFamily="Courier" />
+                        </Frame>
+                    </StackLayout>
+
+                    <StackLayout Grid.Row="1" Spacing="6" Margin="0,0,0,16">
+                        <Label Text="Category"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Black}"
+                               FontSize="13"
+                               FontFamily="Courier" />
+                        <Frame BackgroundColor="{StaticResource CategoryBackground}"
                                BorderColor="{StaticResource ControlDark}"
                                CornerRadius="0"
                                HasShadow="False"
                                Padding="8">
-                            <Entry Text="{Binding Note.Title}"
-                                   Placeholder="Enter note title..."
-                                   FontSize="16"
-                                   BackgroundColor="Transparent" />
-                        </Frame>
-                    </StackLayout>
-
-                    
-                    <StackLayout Grid.Row="1" Spacing="4" Margin="0,0,0,12">
-                        <Label Text="Category:"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource Black}" />
-                        <Frame BackgroundColor="{StaticResource ButtonFace}"
-                               BorderColor="{StaticResource ControlDark}"
-                               CornerRadius="0"
-                               HasShadow="False"
-                               Padding="4">
-                            <Picker Title="Select Category"
+                            <Picker Title="Choose a category"
                                     SelectedItem="{Binding Note.Category}"
-                                    BackgroundColor="Transparent">
+                                    BackgroundColor="Transparent"
+                                    FontFamily="Courier"
+                                    FontSize="12">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
                                         <x:String>General</x:String>
@@ -84,79 +100,104 @@
                                         <x:String>Tasks</x:String>
                                         <x:String>Notes</x:String>
                                         <x:String>Research</x:String>
+                                        <x:String>Meeting</x:String>
+                                        <x:String>Project</x:String>
                                     </x:Array>
                                 </Picker.ItemsSource>
                             </Picker>
                         </Frame>
                     </StackLayout>
 
-                    
-                    <StackLayout Grid.Row="2" Spacing="4" Margin="0,0,0,12">
-                        <Label Text="Tags:"
+                    <StackLayout Grid.Row="2" Spacing="6" Margin="0,0,0,16">
+                        <Label Text="Tags"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource Black}" />
-                        <Frame BackgroundColor="{StaticResource White}"
+                               TextColor="{StaticResource Black}"
+                               FontSize="13"
+                               FontFamily="Courier" />
+                        <Frame BackgroundColor="{StaticResource SearchBackground}"
                                BorderColor="{StaticResource ControlDark}"
                                CornerRadius="0"
                                HasShadow="False"
-                               Padding="8">
+                               Padding="12">
                             <Entry Text="{Binding Note.Tags}"
-                                   Placeholder="Enter tags separated by commas..."
-                                   FontSize="14"
-                                   BackgroundColor="Transparent" />
+                                   Placeholder="Enter tags separated by commas"
+                                   FontSize="12"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource Black}"
+                                   FontFamily="Courier" />
                         </Frame>
                     </StackLayout>
 
-                    
                     <Frame Grid.Row="3"
-                           BackgroundColor="{StaticResource Secondary}"
+                           BackgroundColor="{StaticResource MetadataBackground}"
                            BorderColor="{StaticResource Primary}"
                            CornerRadius="0"
                            HasShadow="False"
-                           Padding="8"
-                           Margin="0,0,0,12">
-                        <StackLayout Spacing="2">
-                            <Label Text="{Binding Note.DateCreated, StringFormat='Created: {0:dd MMM yyyy HH:mm}'}"
-                                   Style="{StaticResource MetadataLabel}"
-                                   FontSize="12" />
-                            <Label Text="{Binding Note.DateModified, StringFormat='Last modified: {0:dd MMM yyyy HH:mm}'}"
-                                   Style="{StaticResource MetadataLabel}"
-                                   FontSize="12" />
-                        </StackLayout>
+                           Padding="12"
+                           Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="Created"
+                                       FontSize="10"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource BeigeText}"
+                                       FontFamily="Courier" />
+                                <Label Text="{Binding Note.FormattedDateCreated}"
+                                       Style="{StaticResource MetadataLabel}"
+                                       FontSize="10"
+                                       FontFamily="Courier" />
+                            </StackLayout>
+                            
+                            <StackLayout Grid.Column="1" Spacing="2">
+                                <Label Text="Last Modified"
+                                       FontSize="10"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource BeigeText}"
+                                       FontFamily="Courier" />
+                                <Label Text="{Binding Note.FormattedDateModified}"
+                                       Style="{StaticResource MetadataLabel}"
+                                       FontSize="10"
+                                       FontFamily="Courier" />
+                            </StackLayout>
+                        </Grid>
                     </Frame>
 
-                    
-                    <StackLayout Grid.Row="4" Spacing="4" Margin="0,0,0,8">
-                        <Label Text="Content:"
+                    <StackLayout Grid.Row="4" Spacing="6" Margin="0,0,0,8">
+                        <Label Text="Content"
                                FontAttributes="Bold"
-                               TextColor="{StaticResource Black}" />
+                               TextColor="{StaticResource Black}"
+                               FontSize="13"
+                               FontFamily="Courier" />
                     </StackLayout>
 
-                   
                     <Frame Grid.Row="5"
-                           BackgroundColor="{StaticResource White}"
+                           BackgroundColor="{StaticResource NoteContentBackground}"
                            BorderColor="{StaticResource ControlDark}"
                            CornerRadius="0"
                            HasShadow="False"
-                           Padding="8"
+                           Padding="12"
                            VerticalOptions="FillAndExpand">
                         <Editor Text="{Binding Note.Content}"
-                                Placeholder="Start typing your note here..."
-                                FontSize="14"
+                                Placeholder="Start typing your note content here..."
+                                FontSize="12"
                                 AutoSize="TextChanges"
                                 BackgroundColor="Transparent"
                                 VerticalOptions="FillAndExpand"
-                                MinimumHeightRequest="200" />
+                                MinimumHeightRequest="250"
+                                TextColor="{StaticResource Black}"
+                                PlaceholderColor="{StaticResource Gray500}"
+                                FontFamily="Courier" />
                     </Frame>
                 </Grid>
             </Frame>
 
-            
-            <Frame BackgroundColor="{StaticResource ButtonFace}"
-                   BorderColor="{StaticResource ControlDark}"
-                   CornerRadius="0"
-                   HasShadow="False"
-                   Padding="12">
+            <Frame Style="{StaticResource HeaderFrame}"
+                   Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -164,21 +205,31 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     
-                    
-                    
-                    
-                    
+                   <Label Grid.Column="0"
+                           Text="Tip: Use tags to organise your notes"
+                           VerticalOptions="Center"
+                           TextColor="{StaticResource Gray600}"
+                           FontSize="11"
+                           FontAttributes="Italic"
+                           FontFamily="Courier" />
+                           
                     <Button Grid.Column="1"
                             Text="Save"
                             Style="{StaticResource AccentButton}"
                             Command="{Binding SaveCommand}"
-                            WidthRequest="80"
-                            Margin="8,0" />
+                            WidthRequest="70"
+                            Margin="8,0"
+                            FontFamily="Courier"
+                            FontSize="11" />
                     
                     <Button Grid.Column="2"
                             Text="Cancel"
                             Command="{Binding BackCommand}"
-                            WidthRequest="80" />
+                            WidthRequest="70"
+                            BackgroundColor="{StaticResource Gray300}"
+                            TextColor="{StaticResource Black}"
+                            FontFamily="Courier"
+                            FontSize="11" />
                 </Grid>
             </Frame>
         </StackLayout>
