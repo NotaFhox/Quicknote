@@ -11,8 +11,28 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
-            <!-- Converters -->
             <converters:StringIsNotNullOrEmptyConverter x:Key="StringIsNotNullOrEmptyConverter" />
+            <converters:BoolToSortIconConverter x:Key="BoolToSortIconConverter" />
+            <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
+            <converters:DateTimeToRelativeTimeConverter x:Key="DateTimeToRelativeTimeConverter" />
+            
+            <OnPlatform x:Key="PagePadding" x:TypeArguments="Thickness">
+                <On Platform="iOS" Value="0,20,0,0" />
+                <On Platform="Android" Value="0" />
+                <On Platform="WinUI" Value="0" />
+            </OnPlatform>
+            
+            <OnPlatform x:Key="DefaultFontFamily" x:TypeArguments="x:String">
+                <On Platform="WinUI" Value="MS Sans Serif" />
+                <On Platform="Android" Value="sans-serif" />
+                <On Platform="iOS" Value="System" />
+            </OnPlatform>
+            
+            <OnPlatform x:Key="MonospaceFontFamily" x:TypeArguments="x:String">
+                <On Platform="WinUI" Value="Courier New" />
+                <On Platform="Android" Value="monospace" />
+                <On Platform="iOS" Value="Courier" />
+            </OnPlatform>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

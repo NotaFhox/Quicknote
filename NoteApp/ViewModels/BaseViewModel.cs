@@ -167,7 +167,7 @@ namespace NoteApp.ViewModels
                         HandleError(ex);
                     }
                 },
-                canExecute: canExecute
+                canExecute: canExecute ?? (() => true) // Default to always executable
             );
         }
 
@@ -175,7 +175,7 @@ namespace NoteApp.ViewModels
         {
             return new Command(
                 execute: async () => await ExecuteAsync(execute),
-                canExecute: canExecute
+                canExecute: canExecute ?? (() => true)
             );
         }
 
@@ -202,7 +202,7 @@ namespace NoteApp.ViewModels
         {
             return new Command<T>(
                 execute: async (parameter) => await ExecuteAsync(() => execute(parameter)),
-                canExecute: canExecute
+                canExecute: canExecute ?? (_ => true) // Default to always executable
             );
         }
 

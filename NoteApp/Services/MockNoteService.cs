@@ -10,12 +10,12 @@ namespace NoteApp.Services
             new Note { Id = 2, Title = "Shopping List", Content = "- Milk\n- Bread\n- Eggs\n- Butter" },
             new Note { Id = 3, Title = "Meeting Notes", Content = "Discussed project timeline and deliverables." }
         };
-        
+
         private int _nextId = 4;
 
         public async Task<List<Note>> GetNotesAsync()
         {
-            await Task.Delay(100); 
+            await Task.Delay(100);
             return _notes.OrderByDescending(n => n.DateModified).ToList();
         }
 
@@ -28,7 +28,7 @@ namespace NoteApp.Services
         public async Task<int> SaveNoteAsync(Note note)
         {
             await Task.Delay(100);
-            
+
             if (note.Id == 0)
             {
                 note.Id = _nextId++;
@@ -47,7 +47,7 @@ namespace NoteApp.Services
                     existingNote.DateModified = DateTime.Now;
                 }
             }
-            
+
             return note.Id;
         }
 
@@ -66,14 +66,14 @@ namespace NoteApp.Services
         public async Task<List<Note>> SearchNotesAsync(string searchTerm)
         {
             await Task.Delay(50);
-            
+
             if (string.IsNullOrWhiteSpace(searchTerm))
                 return await GetNotesAsync();
 
             searchTerm = searchTerm.ToLower();
-            
+
             return _notes
-                .Where(n => n.Title.ToLower().Contains(searchTerm) || 
+                .Where(n => n.Title.ToLower().Contains(searchTerm) ||
                            n.Content.ToLower().Contains(searchTerm) ||
                            n.Category.ToLower().Contains(searchTerm) ||
                            n.Tags.ToLower().Contains(searchTerm))
@@ -84,7 +84,7 @@ namespace NoteApp.Services
         public async Task<List<Note>> GetNotesByCategoryAsync(string category)
         {
             await Task.Delay(50);
-            
+
             if (string.IsNullOrWhiteSpace(category) || category == "All")
                 return await GetNotesAsync();
 
@@ -97,7 +97,7 @@ namespace NoteApp.Services
         public async Task<List<string>> GetCategoriesAsync()
         {
             await Task.Delay(50);
-            
+
             var categories = _notes
                 .Select(n => n.Category)
                 .Distinct()
@@ -108,16 +108,16 @@ namespace NoteApp.Services
             return categories;
         }
 
-        
+
         public async Task<int> DeleteMultipleNotesAsync(IEnumerable<Note> notes)
         {
             ArgumentNullException.ThrowIfNull(notes);
-            
-            await Task.Delay(100); 
-            
+
+            await Task.Delay(100);
+
             var noteList = notes.ToList();
             var deletedCount = 0;
-            
+
             foreach (var note in noteList)
             {
                 var existingNote = _notes.FirstOrDefault(n => n.Id == note.Id);
@@ -127,18 +127,18 @@ namespace NoteApp.Services
                     deletedCount++;
                 }
             }
-            
+
             return deletedCount;
         }
 
-        
+
         public async Task<bool> IsHealthyAsync()
         {
-            await Task.Delay(10); 
-            
+            await Task.Delay(10);
+
             try
             {
-                
+
                 return _notes != null;
             }
             catch
@@ -148,3 +148,5 @@ namespace NoteApp.Services
         }
     }
 }
+
+// I'm not actually sure why this file is here, but deleting it breaks the build so...

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace NoteApp.Models
 {
@@ -11,6 +12,10 @@ namespace NoteApp.Models
         private DateTime _dateModified;
         private string _category = "General";
         private string _tags = string.Empty;
+        private string? _contentPreview;
+        private string? _formattedDateCreated;
+        private string? _formattedDateModified;
+        private List<string>? _tagList;
 
         public int Id { get; set; }
         
@@ -40,6 +45,7 @@ namespace NoteApp.Models
                 if (_content != value)
                 {
                     _content = value ?? string.Empty;
+                    _contentPreview = null;
                     DateModified = DateTime.Now;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(HasContent));
@@ -72,6 +78,7 @@ namespace NoteApp.Models
                 if (_tags != value)
                 {
                     _tags = value ?? string.Empty;
+                    _tagList = null;
                     DateModified = DateTime.Now;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(TagList));
@@ -87,6 +94,7 @@ namespace NoteApp.Models
                 if (_dateCreated != value)
                 {
                     _dateCreated = value;
+                    _formattedDateCreated = null;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(FormattedDateCreated));
                 }
@@ -101,6 +109,7 @@ namespace NoteApp.Models
                 if (_dateModified != value)
                 {
                     _dateModified = value;
+                    _formattedDateModified = null;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(FormattedDateModified));
                     OnPropertyChanged(nameof(TimeAgo));
@@ -108,25 +117,31 @@ namespace NoteApp.Models
             }
         }
 
-        
         public bool HasContent => !string.IsNullOrWhiteSpace(Title) || !string.IsNullOrWhiteSpace(Content);
         
         public string ContentPreview 
         { 
             get 
             {
-                if (string.IsNullOrWhiteSpace(Content))
-                    return "No content";
-                
-                const int maxLength = 100;
-                return Content.Length <= maxLength 
-                    ? Content 
-                    : Content[..maxLength] + "...";
+                if (_contentPreview == null)
+                {
+                    if (string.IsNullOrWhiteSpace(Content))
+                        _contentPreview = "No content";
+                    else
+                    {
+                        const int maxLength = 100;
+                        var cleanContent = Content.Replace("\r\n", " ").Replace("\n", " ").Replace("  ", " ").Trim();
+                        _contentPreview = cleanContent.Length <= maxLength 
+                            ? cleanContent 
+                            : cleanContent[..maxLength] + "...";
+                    }
+                }
+                return _contentPreview;
             }
         }
 
-        public string FormattedDateCreated => DateCreated.ToString("dd MMM yyyy HH:mm");
-        public string FormattedDateModified => DateModified.ToString("dd MMM yyyy HH:mm");
+        public string FormattedDateCreated => _formattedDateCreated ??= DateCreated.ToString("dd MMM yyyy HH:mm");
+        public string FormattedDateModified => _formattedDateModified ??= DateModified.ToString("dd MMM yyyy HH:mm");
 
         public string TimeAgo
         {
@@ -150,13 +165,19 @@ namespace NoteApp.Models
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(Tags))
-                    return new List<string>();
-                
-                return Tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                          .Select(tag => tag.Trim())
-                          .Where(tag => !string.IsNullOrWhiteSpace(tag))
-                          .ToList();
+                if (_tagList == null)
+                {
+                    if (string.IsNullOrWhiteSpace(Tags))
+                        _tagList = new List<string>();
+                    else
+                    {
+                        _tagList = Tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                  .Select(tag => tag.Trim())
+                                  .Where(tag => !string.IsNullOrWhiteSpace(tag))
+                                  .ToList();
+                    }
+                }
+                return _tagList;
             }
         }
 
@@ -166,7 +187,6 @@ namespace NoteApp.Models
             DateModified = DateTime.Now;
         }
 
-       
         public Note(Note other)
         {
             ArgumentNullException.ThrowIfNull(other);
@@ -182,12 +202,11 @@ namespace NoteApp.Models
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        
         public List<ValidationResult> Validate()
         {
             var results = new List<ValidationResult>();
@@ -200,7 +219,6 @@ namespace NoteApp.Models
 
         public bool IsValid => !Validate().Any();
 
-        
         public override bool Equals(object? obj)
         {
             return obj is Note other && Id == other.Id;
@@ -216,7 +234,6 @@ namespace NoteApp.Models
             return $"Note: {Title} ({Id})";
         }
 
-       
         public bool MatchesSearchTerm(string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
@@ -229,7 +246,6 @@ namespace NoteApp.Models
                    Tags.ToLowerInvariant().Contains(term);
         }
 
-        
         public void AddTag(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))
@@ -245,7 +261,6 @@ namespace NoteApp.Models
             }
         }
 
-       
         public void RemoveTag(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))

@@ -7,231 +7,307 @@
              Title="{Binding Title}"
              BackgroundColor="{StaticResource WindowsBeige}">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" 
-                     Command="{Binding SaveCommand}" />
-        <ToolbarItem Text="Back" 
-                     Command="{Binding BackCommand}" />
-    </ContentPage.ToolbarItems>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-    <ScrollView Padding="8">
-        <StackLayout Spacing="12">
-            
-            <Frame Style="{StaticResource HeaderFrame}"
-                   Padding="16">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    
-                    <Label Grid.Column="0"
-                           Text="Note Editor"
-                           Style="{StaticResource SubHeadline}"
+        <Border Grid.Row="0"
+                StrokeThickness="2"
+                Stroke="{StaticResource ButtonShadow}"
+                BackgroundColor="{StaticResource ButtonFace}">
+            <Grid Padding="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                    <Label Text="📝"
+                           FontSize="16"
+                           VerticalOptions="Center" />
+                    <Label Text="Notepad - "
+                           FontAttributes="Bold"
                            VerticalOptions="Center"
-                           FontFamily="Courier" />
-                    
-                    <Label Grid.Column="1"
-                           Text="{Binding Note.Id, StringFormat='#{0:D3}'}"
-                           TextColor="{StaticResource Gray600}"
-                           FontSize="11"
-                           FontFamily="Courier"
+                           FontFamily="MS Sans Serif"
+                           FontSize="12" />
+                    <Label Text="{Binding Note.Title, TargetNullValue='[Untitled]'}"
                            VerticalOptions="Center"
-                           IsVisible="{Binding Note.Id, Converter={StaticResource StringIsNotNullOrEmptyConverter}}" />
-                </Grid>
-            </Frame>
-
-            <Frame Style="{StaticResource PaperFrame}"
-                   BackgroundColor="{StaticResource PaperWhite}"
-                   Padding="20">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <StackLayout Grid.Row="0" Spacing="6" Margin="0,0,0,16">
-                        <Label Text="Title"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource Black}"
-                               FontSize="13"
-                               FontFamily="Courier" />
-                        <Frame BackgroundColor="{StaticResource SearchBackground}"
-                               BorderColor="{StaticResource ControlDark}"
-                               CornerRadius="0"
-                               HasShadow="False"
-                               Padding="12">
-                            <Entry Text="{Binding Note.Title}"
-                                   Placeholder="Enter a descriptive title for your note..."
-                                   FontSize="14"
-                                   BackgroundColor="Transparent"
-                                   TextColor="{StaticResource Black}"
-                                   FontFamily="Courier" />
-                        </Frame>
-                    </StackLayout>
-
-                    <StackLayout Grid.Row="1" Spacing="6" Margin="0,0,0,16">
-                        <Label Text="Category"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource Black}"
-                               FontSize="13"
-                               FontFamily="Courier" />
-                        <Frame BackgroundColor="{StaticResource CategoryBackground}"
-                               BorderColor="{StaticResource ControlDark}"
-                               CornerRadius="0"
-                               HasShadow="False"
-                               Padding="8">
-                            <Picker Title="Choose a category"
-                                    SelectedItem="{Binding Note.Category}"
-                                    BackgroundColor="Transparent"
-                                    FontFamily="Courier"
-                                    FontSize="12">
-                                <Picker.ItemsSource>
-                                    <x:Array Type="{x:Type x:String}">
-                                        <x:String>General</x:String>
-                                        <x:String>Work</x:String>
-                                        <x:String>Personal</x:String>
-                                        <x:String>Ideas</x:String>
-                                        <x:String>Shopping</x:String>
-                                        <x:String>Tasks</x:String>
-                                        <x:String>Notes</x:String>
-                                        <x:String>Research</x:String>
-                                        <x:String>Meeting</x:String>
-                                        <x:String>Project</x:String>
-                                    </x:Array>
-                                </Picker.ItemsSource>
-                            </Picker>
-                        </Frame>
-                    </StackLayout>
-
-                    <StackLayout Grid.Row="2" Spacing="6" Margin="0,0,0,16">
-                        <Label Text="Tags"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource Black}"
-                               FontSize="13"
-                               FontFamily="Courier" />
-                        <Frame BackgroundColor="{StaticResource SearchBackground}"
-                               BorderColor="{StaticResource ControlDark}"
-                               CornerRadius="0"
-                               HasShadow="False"
-                               Padding="12">
-                            <Entry Text="{Binding Note.Tags}"
-                                   Placeholder="Enter tags separated by commas"
-                                   FontSize="12"
-                                   BackgroundColor="Transparent"
-                                   TextColor="{StaticResource Black}"
-                                   FontFamily="Courier" />
-                        </Frame>
-                    </StackLayout>
-
-                    <Frame Grid.Row="3"
-                           BackgroundColor="{StaticResource MetadataBackground}"
-                           BorderColor="{StaticResource Primary}"
-                           CornerRadius="0"
-                           HasShadow="False"
-                           Padding="12"
-                           Margin="0,0,0,16">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            
-                            <StackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="Created"
-                                       FontSize="10"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource BeigeText}"
-                                       FontFamily="Courier" />
-                                <Label Text="{Binding Note.FormattedDateCreated}"
-                                       Style="{StaticResource MetadataLabel}"
-                                       FontSize="10"
-                                       FontFamily="Courier" />
-                            </StackLayout>
-                            
-                            <StackLayout Grid.Column="1" Spacing="2">
-                                <Label Text="Last Modified"
-                                       FontSize="10"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource BeigeText}"
-                                       FontFamily="Courier" />
-                                <Label Text="{Binding Note.FormattedDateModified}"
-                                       Style="{StaticResource MetadataLabel}"
-                                       FontSize="10"
-                                       FontFamily="Courier" />
-                            </StackLayout>
-                        </Grid>
-                    </Frame>
-
-                    <StackLayout Grid.Row="4" Spacing="6" Margin="0,0,0,8">
-                        <Label Text="Content"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource Black}"
-                               FontSize="13"
-                               FontFamily="Courier" />
-                    </StackLayout>
-
-                    <Frame Grid.Row="5"
-                           BackgroundColor="{StaticResource NoteContentBackground}"
-                           BorderColor="{StaticResource ControlDark}"
-                           CornerRadius="0"
-                           HasShadow="False"
-                           Padding="12"
-                           VerticalOptions="FillAndExpand">
-                        <Editor Text="{Binding Note.Content}"
-                                Placeholder="Start typing your note content here..."
-                                FontSize="12"
-                                AutoSize="TextChanges"
-                                BackgroundColor="Transparent"
-                                VerticalOptions="FillAndExpand"
-                                MinimumHeightRequest="250"
-                                TextColor="{StaticResource Black}"
-                                PlaceholderColor="{StaticResource Gray500}"
-                                FontFamily="Courier" />
-                    </Frame>
-                </Grid>
-            </Frame>
-
-            <Frame Style="{StaticResource HeaderFrame}"
-                   Padding="16">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    
-                   <Label Grid.Column="0"
-                           Text="Tip: Use tags to organise your notes"
-                           VerticalOptions="Center"
-                           TextColor="{StaticResource Gray600}"
-                           FontSize="11"
-                           FontAttributes="Italic"
-                           FontFamily="Courier" />
-                           
-                    <Button Grid.Column="1"
-                            Text="Save"
-                            Style="{StaticResource AccentButton}"
+                           FontFamily="MS Sans Serif"
+                           FontSize="12" />
+                </HorizontalStackLayout>
+                
+                <HorizontalStackLayout Grid.Column="2" Spacing="2">
+                    <Button Text="Save"
                             Command="{Binding SaveCommand}"
-                            WidthRequest="70"
-                            Margin="8,0"
-                            FontFamily="Courier"
-                            FontSize="11" />
-                    
-                    <Button Grid.Column="2"
-                            Text="Cancel"
+                            WidthRequest="48"
+                            HeightRequest="22"
+                            FontFamily="MS Sans Serif"
+                            FontSize="10"
+                            Padding="2" />
+                    <Button Text="Close"
                             Command="{Binding BackCommand}"
-                            WidthRequest="70"
-                            BackgroundColor="{StaticResource Gray300}"
-                            TextColor="{StaticResource Black}"
-                            FontFamily="Courier"
-                            FontSize="11" />
-                </Grid>
-            </Frame>
-        </StackLayout>
-    </ScrollView>
+                            WidthRequest="48"
+                            HeightRequest="22"
+                            FontFamily="MS Sans Serif"
+                            FontSize="10"
+                            Padding="2" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1">
+            <Grid Padding="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"
+                        StrokeThickness="2"
+                        BackgroundColor="{StaticResource Gray100}"
+                        Margin="0,0,0,4">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="0" />
+                    </Border.StrokeShape>
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{StaticResource Gray700}" Offset="0.0" />
+                            <GradientStop Color="{StaticResource Gray300}" Offset="0.5" />
+                            <GradientStop Color="{StaticResource White}" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    
+                    <Grid Padding="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Text="Title:"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               Margin="0,0,8,0"
+                               FontFamily="MS Sans Serif"
+                               FontSize="11" />
+                        
+                        <Border Grid.Row="0" Grid.Column="1"
+                                StrokeThickness="2"
+                                BackgroundColor="{StaticResource SearchBackground}"
+                                Margin="0,0,8,0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="0" />
+                            </Border.StrokeShape>
+                            <Border.Stroke>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="{StaticResource Gray700}" Offset="0.0" />
+                                    <GradientStop Color="{StaticResource Gray300}" Offset="0.5" />
+                                    <GradientStop Color="{StaticResource White}" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Stroke>
+                            <Entry Text="{Binding Note.Title}"
+                                   Placeholder="Enter title..."
+                                   BackgroundColor="Transparent"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="11"
+                                   Margin="4,2" />
+                        </Border>
+                        
+                        <Label Grid.Row="0" Grid.Column="2"
+                               Text="Category:"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               Margin="0,0,8,0"
+                               FontFamily="MS Sans Serif"
+                               FontSize="11" />
+                        
+                        <Picker Grid.Row="0" Grid.Column="3"
+                                Title="Select"
+                                SelectedItem="{Binding Note.Category}"
+                                BackgroundColor="{StaticResource CategoryBackground}"
+                                FontFamily="MS Sans Serif"
+                                FontSize="11">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>General</x:String>
+                                    <x:String>Work</x:String>
+                                    <x:String>Personal</x:String>
+                                    <x:String>Ideas</x:String>
+                                    <x:String>Tasks</x:String>
+                                    <x:String>Meeting</x:String>
+                                    <x:String>Project</x:String>
+                                    <x:String>Research</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                        
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Text="Tags:"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               Margin="0,8,8,0"
+                               FontFamily="MS Sans Serif"
+                               FontSize="11" />
+                        
+                        <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+                                StrokeThickness="2"
+                                BackgroundColor="{StaticResource SearchBackground}"
+                                Margin="0,8,0,0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="0" />
+                            </Border.StrokeShape>
+                            <Border.Stroke>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="{StaticResource Gray700}" Offset="0.0" />
+                                    <GradientStop Color="{StaticResource Gray300}" Offset="0.5" />
+                                    <GradientStop Color="{StaticResource White}" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Stroke>
+                            <Entry Text="{Binding Note.Tags}"
+                                   Placeholder="comma, separated, tags"
+                                   BackgroundColor="Transparent"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="11"
+                                   Margin="4,2" />
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1"
+                        StrokeThickness="1"
+                        Stroke="{StaticResource Gray500}"
+                        BackgroundColor="{StaticResource MetadataBackground}"
+                        Padding="6"
+                        Margin="0,0,0,4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <HorizontalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Created:"
+                                   FontAttributes="Bold"
+                                   FontSize="9"
+                                   FontFamily="MS Sans Serif" />
+                            <Label Text="{Binding Note.FormattedDateCreated}"
+                                   FontSize="9"
+                                   FontFamily="MS Sans Serif" />
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Modified:"
+                                   FontAttributes="Bold"
+                                   FontSize="9"
+                                   FontFamily="MS Sans Serif" />
+                            <Label Text="{Binding Note.FormattedDateModified}"
+                                   FontSize="9"
+                                   FontFamily="MS Sans Serif" />
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="End">
+                            <Label Text="ID:"
+                                   FontAttributes="Bold"
+                                   FontSize="9"
+                                   FontFamily="MS Sans Serif" />
+                            <Label Text="{Binding Note.Id, StringFormat='#{0:D4}'}"
+                                   FontSize="9"
+                                   FontFamily="MS Sans Serif" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2"
+                        StrokeThickness="2"
+                        BackgroundColor="{StaticResource NoteContentBackground}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="0" />
+                    </Border.StrokeShape>
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{StaticResource Gray700}" Offset="0.0" />
+                            <GradientStop Color="{StaticResource Gray300}" Offset="0.5" />
+                            <GradientStop Color="{StaticResource White}" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    
+                    <Editor Text="{Binding Note.Content}"
+                            Placeholder="Start typing..."
+                            FontFamily="Courier New"
+                            FontSize="11"
+                            AutoSize="TextChanges"
+                            BackgroundColor="Transparent"
+                            MinimumHeightRequest="400"
+                            Margin="8"
+                            Keyboard="Text" />
+                </Border>
+            </Grid>
+        </ScrollView>
+
+        <Border Grid.Row="2"
+                StrokeThickness="2"
+                BackgroundColor="{StaticResource ButtonFace}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0" />
+            </Border.StrokeShape>
+            <Border.Stroke>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="{StaticResource White}" Offset="0.0" />
+                    <GradientStop Color="{StaticResource Gray300}" Offset="0.5" />
+                    <GradientStop Color="{StaticResource Gray700}" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Stroke>
+            
+            <Grid Padding="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <Border Grid.Column="0"
+                        StrokeThickness="1"
+                        Stroke="{StaticResource Gray500}"
+                        BackgroundColor="{StaticResource Gray100}"
+                        Padding="4,0"
+                        Margin="0,0,8,0">
+                    <Label Text="Press F1 for Help"
+                           VerticalOptions="Center"
+                           FontFamily="MS Sans Serif"
+                           FontSize="10" />
+                </Border>
+                
+                <HorizontalStackLayout Grid.Column="1" Spacing="4">
+                    <Button Text="💾 Save"
+                            Command="{Binding SaveCommand}"
+                            WidthRequest="60"
+                            HeightRequest="24"
+                            FontFamily="MS Sans Serif"
+                            FontSize="10"
+                            BackgroundColor="{StaticResource AccentBlue}"
+                            TextColor="White"
+                            Padding="2" />
+                    
+                    <Button Text="Cancel"
+                            Command="{Binding BackCommand}"
+                            WidthRequest="56"
+                            HeightRequest="24"
+                            FontFamily="MS Sans Serif"
+                            FontSize="10"
+                            Padding="2" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+    </Grid>
 </ContentPage>
