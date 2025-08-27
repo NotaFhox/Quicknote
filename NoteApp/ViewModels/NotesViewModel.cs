@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Microsoft.Extensions.Logging;
 using NoteApp.Models;
 using NoteApp.Services;
 using NoteApp.Views;
@@ -136,7 +137,34 @@ namespace NoteApp.ViewModels
         public ICommand LoadMoreCommand { get; }
         public ICommand QuickAddNoteCommand { get; }
         public ICommand DeleteSelectedNotesCommand { get; }
+        private readonly ILogger<NotesViewModel> _logger;
 
+        public NotesViewModel(INoteService noteService, ILogger<NotesViewModel> logger)
+        {
+            _noteService = noteService;
+            _logger = logger;
+            Title = "My Notes";
+
+            LoadNotesCommand = CreateAsyncCommand(LoadNotes);
+            AddNoteCommand = CreateAsyncCommand(AddNote);
+            SelectNoteCommand = CreateAsyncCommand<Note>(SelectNote);
+            DeleteNoteCommand = CreateAsyncCommand<Note>(DeleteNote);
+            SearchCommand = CreateAsyncCommand(SearchNotes);
+            ClearSearchCommand = CreateCommand(() => 
+            {
+                SearchText = string.Empty;
+                _ = LoadNotes();
+            });
+            FilterByCategoryCommand = CreateAsyncCommand(FilterByCategory);
+            RefreshCommand = CreateAsyncCommand(RefreshNotes);
+            ToggleSortOrderCommand = CreateCommand(() => 
+            {
+                SortAscending = !SortAscending;
+            });
+            LoadMoreCommand = CreateAsyncCommand(LoadMoreNotes);
+            QuickAddNoteCommand = CreateAsyncCommand<string>(QuickAddNote);
+            DeleteSelectedNotesCommand = CreateAsyncCommand<List<Note>>(DeleteSelectedNotes);
+        }
         public NotesViewModel(INoteService noteService)
         {
             _noteService = noteService;
@@ -170,8 +198,13 @@ namespace NoteApp.ViewModels
             await ExecuteAsync(async () =>
             {
                 _currentPage = 1;
-                Notes.Clear();
-                FilteredNotes.Clear();
+                
+                // Clear collections on UI thread
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    Notes.Clear();
+                    FilteredNotes.Clear();
+                });
                 
                 var sw = Stopwatch.StartNew();
                 _allNotes = await _noteService.GetNotesAsync();
@@ -196,12 +229,15 @@ namespace NoteApp.ViewModels
                 var startIndex = (_currentPage - 1) * PageSize;
                 var endIndex = Math.Min(startIndex + PageSize, FilteredNotes.Count);
                 
-                for (int i = startIndex; i < endIndex; i++)
+                await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    Notes.Add(FilteredNotes[i]);
-                }
-                
-                HasMoreItems = Notes.Count < FilteredNotes.Count;
+                    for (int i = startIndex; i < endIndex; i++)
+                    {
+                        Notes.Add(FilteredNotes[i]);
+                    }
+                    
+                    HasMoreItems = Notes.Count < FilteredNotes.Count;
+                });
             }
             finally
             {
@@ -211,7 +247,7 @@ namespace NoteApp.ViewModels
 
         private async Task FilterNotesAsync()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 var filtered = _allNotes.AsEnumerable();
                 
@@ -226,56 +262,63 @@ namespace NoteApp.ViewModels
                     filtered = filtered.Where(n => n.Category == SelectedCategory);
                 }
                 
-                FilteredNotes.Clear();
-                foreach (var note in filtered)
+                await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    FilteredNotes.Add(note);
-                }
+                    FilteredNotes.Clear();
+                    foreach (var note in filtered)
+                    {
+                        FilteredNotes.Add(note);
+                    }
+                });
                 
                 SortNotes();
-                LoadFirstPage();
+                await LoadFirstPageAsync();
             });
         }
 
-        private void LoadFirstPage()
+        private async Task LoadFirstPageAsync()
         {
-            Notes.Clear();
-            _currentPage = 1;
-            
-            var endIndex = Math.Min(PageSize, FilteredNotes.Count);
-            for (int i = 0; i < endIndex; i++)
+            await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                Notes.Add(FilteredNotes[i]);
-            }
-            
-            HasMoreItems = Notes.Count < FilteredNotes.Count;
+                Notes.Clear();
+                _currentPage = 1;
+                
+                var endIndex = Math.Min(PageSize, FilteredNotes.Count);
+                for (int i = 0; i < endIndex; i++)
+                {
+                    Notes.Add(FilteredNotes[i]);
+                }
+                
+                HasMoreItems = Notes.Count < FilteredNotes.Count;
+            });
         }
 
         private void SortNotes()
         {
-            var sorted = SortBy switch
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                "Title" => SortAscending 
-                    ? FilteredNotes.OrderBy(n => n.Title).ToList()
-                    : FilteredNotes.OrderByDescending(n => n.Title).ToList(),
-                "Category" => SortAscending
-                    ? FilteredNotes.OrderBy(n => n.Category).ThenByDescending(n => n.DateModified).ToList()
-                    : FilteredNotes.OrderByDescending(n => n.Category).ThenByDescending(n => n.DateModified).ToList(),
-                "DateCreated" => SortAscending
-                    ? FilteredNotes.OrderBy(n => n.DateCreated).ToList()
-                    : FilteredNotes.OrderByDescending(n => n.DateCreated).ToList(),
-                _ => SortAscending
-                    ? FilteredNotes.OrderBy(n => n.DateModified).ToList()
-                    : FilteredNotes.OrderByDescending(n => n.DateModified).ToList()
-            };
-            
-            FilteredNotes.Clear();
-            foreach (var note in sorted)
-            {
-                FilteredNotes.Add(note);
-            }
-            
-            LoadFirstPage();
+                var sorted = SortBy switch
+                {
+                    "Title" => SortAscending 
+                        ? FilteredNotes.OrderBy(n => n.Title).ToList()
+                        : FilteredNotes.OrderByDescending(n => n.Title).ToList(),
+                    "Category" => SortAscending
+                        ? FilteredNotes.OrderBy(n => n.Category).ThenByDescending(n => n.DateModified).ToList()
+                        : FilteredNotes.OrderByDescending(n => n.Category).ThenByDescending(n => n.DateModified).ToList(),
+                    "DateCreated" => SortAscending
+                        ? FilteredNotes.OrderBy(n => n.DateCreated).ToList()
+                        : FilteredNotes.OrderByDescending(n => n.DateCreated).ToList(),
+                    _ => SortAscending
+                        ? FilteredNotes.OrderBy(n => n.DateModified).ToList()
+                        : FilteredNotes.OrderByDescending(n => n.DateModified).ToList()
+                };
+                
+                FilteredNotes.Clear();
+                foreach (var note in sorted)
+                {
+                    FilteredNotes.Add(note);
+                }
+            });
         }
 
         private async void DelayedSearch()
@@ -290,6 +333,7 @@ namespace NoteApp.ViewModels
             }
             catch (TaskCanceledException)
             {
+                // Search was cancelled, this is expected
             }
         }
 
@@ -301,60 +345,110 @@ namespace NoteApp.ViewModels
         private async Task RefreshNotes()
         {
             IsRefreshing = true;
-            await LoadNotes();
-            IsRefreshing = false;
+            try
+            {
+                await LoadNotes();
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
         }
 
         private async Task AddNote()
         {
-            var newNote = new Note
+            try
             {
-                Title = "New Note",
-                Content = "",
-                Category = SelectedCategory == "All" ? "General" : SelectedCategory
-            };
-            
-            await Shell.Current.GoToAsync($"{nameof(NoteDetailPage)}?NoteId=0", new Dictionary<string, object>
+                var newNote = new Note
+                {
+                    Title = "New Note",
+                    Content = "",
+                    Category = SelectedCategory == "All" ? "General" : SelectedCategory
+                };
+                
+                await Shell.Current.GoToAsync($"{nameof(NoteDetailPage)}?NoteId=0", new Dictionary<string, object>
+                {
+                    ["Note"] = newNote
+                });
+            }
+            catch (Exception ex)
             {
-                ["Note"] = newNote
-            });
+                Logger?.LogError(ex, "Error navigating to new note");
+                await Shell.Current.DisplayAlert("Error", "Could not create new note. Please try again.", "OK");
+            }
         }
 
         private async Task QuickAddNote(string title)
         {
             if (string.IsNullOrWhiteSpace(title)) return;
             
-            var newNote = new Note
+            try
             {
-                Title = title,
-                Content = "",
-                Category = SelectedCategory == "All" ? "General" : SelectedCategory
-            };
-            
-            await _noteService.SaveNoteAsync(newNote);
-            await LoadNotes();
+                var newNote = new Note
+                {
+                    Title = title,
+                    Content = "",
+                    Category = SelectedCategory == "All" ? "General" : SelectedCategory
+                };
+                
+                await _noteService.SaveNoteAsync(newNote);
+                await LoadNotes(); // Refresh the list
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error creating quick note");
+                Logger?.LogError(ex, "Error creating quick note");
+                await Shell.Current.DisplayAlert("Error", "Could not create note. Please try again.", "OK");
+            }
         }
 
         private async Task SelectNote(Note? note)
         {
             if (note == null) return;
             
-            await Shell.Current.GoToAsync($"{nameof(NoteDetailPage)}?NoteId={note.Id}");
+            try
+            {
+                await Shell.Current.GoToAsync($"{nameof(NoteDetailPage)}?NoteId={note.Id}");
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error navigating to note {NoteId}", note.Id);
+                await Shell.Current.DisplayAlert("Error", "Could not open note. Please try again.", "OK");
+            }
         }
 
         private async Task DeleteNote(Note? note)
         {
             if (note == null) return;
 
-            bool confirm = await Shell.Current.DisplayAlert("Delete Note", 
-                $"Are you sure you want to delete '{note.Title}'?", "Yes", "No");
-            
-            if (confirm)
+            try
             {
-                await _noteService.DeleteNoteAsync(note);
-                _allNotes.Remove(note);
-                FilteredNotes.Remove(note);
-                Notes.Remove(note);
+                bool confirm = await Shell.Current.DisplayAlert("Delete Note", 
+                    $"Are you sure you want to delete '{note.Title}'?", "Yes", "No");
+                
+                if (confirm)
+                {
+                    await _noteService.DeleteNoteAsync(note);
+                    
+                    // Remove from local collections immediately for UI responsiveness
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        _allNotes.Remove(note);
+                        FilteredNotes.Remove(note);
+                        Notes.Remove(note);
+                    });
+                    
+                    // Optionally refresh to ensure consistency
+                    await LoadNotes();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error deleting note {NoteId}", note.Id);
+                await Shell.Current.DisplayAlert("Error", "Could not delete note. Please try again.", "OK");
+                
+                // Refresh to restore UI state if delete failed
+                await LoadNotes();
             }
         }
 
@@ -362,19 +456,38 @@ namespace NoteApp.ViewModels
         {
             if (notes == null || !notes.Any()) return;
             
-            var count = notes.Count;
-            bool confirm = await Shell.Current.DisplayAlert("Delete Notes", 
-                $"Are you sure you want to delete {count} note{(count > 1 ? "s" : "")}?", "Yes", "No");
-            
-            if (confirm)
+            try
             {
-                await _noteService.DeleteMultipleNotesAsync(notes);
-                foreach (var note in notes)
+                var count = notes.Count;
+                bool confirm = await Shell.Current.DisplayAlert("Delete Notes", 
+                    $"Are you sure you want to delete {count} note{(count > 1 ? "s" : "")}?", "Yes", "No");
+                
+                if (confirm)
                 {
-                    _allNotes.Remove(note);
-                    FilteredNotes.Remove(note);
-                    Notes.Remove(note);
+                    await _noteService.DeleteMultipleNotesAsync(notes);
+                    
+                    // Remove from local collections
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        foreach (var note in notes)
+                        {
+                            _allNotes.Remove(note);
+                            FilteredNotes.Remove(note);
+                            Notes.Remove(note);
+                        }
+                    });
+                    
+                    // Refresh to ensure consistency
+                    await LoadNotes();
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error deleting multiple notes");
+                await Shell.Current.DisplayAlert("Error", "Could not delete notes. Please try again.", "OK");
+                
+                // Refresh to restore UI state
+                await LoadNotes();
             }
         }
 
@@ -386,6 +499,16 @@ namespace NoteApp.ViewModels
         public async Task OnAppearing()
         {
             await LoadNotes();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _searchCancellationTokenSource?.Cancel();
+                _searchCancellationTokenSource?.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

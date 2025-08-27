@@ -2,23 +2,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NoteApp.Data;
 using NoteApp.Models;
-using System.Collections.Concurrent;
 
 namespace NoteApp.Services
 {
     public class DatabaseNoteService : INoteService
     {
-        private readonly NoteDbContext _context;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<DatabaseNoteService> _logger;
-        private readonly ConcurrentDictionary<int, Note> _noteCache = new();
         private readonly SemaphoreSlim _semaphore = new(1, 1);
-        private DateTime _lastCacheRefresh = DateTime.MinValue;
-        private readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(5);
 
-        public DatabaseNoteService(NoteDbContext context, ILogger<DatabaseNoteService> logger)
+        public DatabaseNoteService(IServiceProvider serviceProvider, ILogger<DatabaseNoteService> logger)
         {
-            _context = context;
+            _serviceProvider = serviceProvider;
             _logger = logger;
+        }
+
+        // Create a new context for each operation to avoid tracking conflicts
+        private NoteDbContext CreateContext()
+        {
+            var scope = _serviceProvider.CreateScope();
+            return scope.ServiceProvider.GetRequiredService<NoteDbContext>();
         }
 
         public async Task<List<Note>> GetNotesAsync()
@@ -26,14 +29,20 @@ namespace NoteApp.Services
             await _semaphore.WaitAsync();
             try
             {
-                if (DateTime.Now - _lastCacheRefresh > _cacheExpiration)
-                {
-                    await RefreshCacheAsync();
-                }
-
-                return _noteCache.Values
+                using var context = CreateContext();
+                
+                var notes = await context.Notes
+                    .AsNoTracking()
                     .OrderByDescending(n => n.DateModified)
-                    .ToList();
+                    .ToListAsync();
+
+                _logger.LogInformation("Retrieved {NoteCount} notes", notes.Count);
+                return notes;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving notes");
+                throw;
             }
             finally
             {
@@ -43,23 +52,21 @@ namespace NoteApp.Services
 
         public async Task<Note?> GetNoteAsync(int id)
         {
-            if (_noteCache.TryGetValue(id, out var cachedNote))
-            {
-                return cachedNote;
-            }
-
             try
             {
-                _logger.LogDebug("Cache miss for note ID: {NoteId}", id);
+                using var context = CreateContext();
                 
-                var note = await _context.Notes
+                var note = await context.Notes
                     .AsNoTracking()
                     .FirstOrDefaultAsync(n => n.Id == id);
                 
                 if (note != null)
                 {
-                    _noteCache.TryAdd(id, note);
-                    _logger.LogInformation("Cached note with ID: {NoteId}", id);
+                    _logger.LogInformation("Retrieved note with ID: {NoteId}", id);
+                }
+                else
+                {
+                    _logger.LogWarning("Note not found with ID: {NoteId}", id);
                 }
                 
                 return note;
@@ -80,28 +87,59 @@ namespace NoteApp.Services
                 await _semaphore.WaitAsync();
                 try
                 {
+                    using var context = CreateContext();
+                    
                     if (note.Id == 0)
                     {
                         _logger.LogDebug("Creating new note: {NoteTitle}", note.Title);
                         
-                        note.DateCreated = DateTime.Now;
-                        note.DateModified = DateTime.Now;
-                        _context.Notes.Add(note);
+                        // Create a new note entity to avoid tracking issues
+                        var newNote = new Note
+                        {
+                            Title = note.Title,
+                            Content = note.Content,
+                            Category = note.Category,
+                            Tags = note.Tags,
+                            DateCreated = DateTime.Now,
+                            DateModified = DateTime.Now
+                        };
+                        
+                        context.Notes.Add(newNote);
+                        await context.SaveChangesAsync();
+                        
+                        // Update the original note with the new ID
+                        note.Id = newNote.Id;
+                        note.DateCreated = newNote.DateCreated;
+                        note.DateModified = newNote.DateModified;
+                        
+                        _logger.LogInformation("Created new note with ID: {NoteId}", newNote.Id);
+                        return newNote.Id;
                     }
                     else
                     {
                         _logger.LogDebug("Updating note ID: {NoteId}", note.Id);
                         
-                        note.DateModified = DateTime.Now;
-                        _context.Notes.Update(note);
+                        // Find the existing note and update its properties
+                        var existingNote = await context.Notes.FindAsync(note.Id);
+                        if (existingNote == null)
+                        {
+                            throw new InvalidOperationException($"Note with ID {note.Id} not found");
+                        }
+                        
+                        existingNote.Title = note.Title;
+                        existingNote.Content = note.Content;
+                        existingNote.Category = note.Category;
+                        existingNote.Tags = note.Tags;
+                        existingNote.DateModified = DateTime.Now;
+                        
+                        await context.SaveChangesAsync();
+                        
+                        // Update the original note's modified date
+                        note.DateModified = existingNote.DateModified;
+                        
+                        _logger.LogInformation("Updated note ID: {NoteId}", note.Id);
+                        return note.Id;
                     }
-
-                    await _context.SaveChangesAsync();
-                    
-                    _noteCache.AddOrUpdate(note.Id, note, (key, oldValue) => note);
-                    
-                    _logger.LogInformation("Saved note ID: {NoteId}", note.Id);
-                    return note.Id;
                 }
                 finally
                 {
@@ -124,12 +162,20 @@ namespace NoteApp.Services
                 await _semaphore.WaitAsync();
                 try
                 {
+                    using var context = CreateContext();
+                    
                     _logger.LogDebug("Deleting note ID: {NoteId}", note.Id);
                     
-                    _context.Notes.Remove(note);
-                    var result = await _context.SaveChangesAsync();
+                    // Find the note by ID to ensure we're deleting the right one
+                    var noteToDelete = await context.Notes.FindAsync(note.Id);
+                    if (noteToDelete == null)
+                    {
+                        _logger.LogWarning("Note with ID {NoteId} not found for deletion", note.Id);
+                        return 0;
+                    }
                     
-                    _noteCache.TryRemove(note.Id, out _);
+                    context.Notes.Remove(noteToDelete);
+                    var result = await context.SaveChangesAsync();
                     
                     _logger.LogInformation("Deleted note ID: {NoteId}", note.Id);
                     return result;
@@ -150,6 +196,8 @@ namespace NoteApp.Services
         {
             try
             {
+                using var context = CreateContext();
+                
                 if (string.IsNullOrWhiteSpace(searchTerm))
                 {
                     return await GetNotesAsync();
@@ -159,25 +207,16 @@ namespace NoteApp.Services
                 
                 var normalizedSearchTerm = searchTerm.Trim().ToLowerInvariant();
                 
-                if (_noteCache.Any())
-                {
-                    return _noteCache.Values
-                        .Where(n => n.MatchesSearchTerm(normalizedSearchTerm))
-                        .OrderByDescending(n => n.DateModified)
-                        .ToList();
-                }
-                
-                var notes = await _context.Notes
+                var notes = await context.Notes
                     .AsNoTracking()
                     .Where(n => EF.Functions.Like(n.Title.ToLower(), $"%{normalizedSearchTerm}%") || 
                                EF.Functions.Like(n.Content.ToLower(), $"%{normalizedSearchTerm}%") ||
-                               EF.Functions.Like(n.Tags.ToLower(), $"%{normalizedSearchTerm}%"))
+                               EF.Functions.Like(n.Tags.ToLower(), $"%{normalizedSearchTerm}%") ||
+                               EF.Functions.Like(n.Category.ToLower(), $"%{normalizedSearchTerm}%"))
                     .OrderByDescending(n => n.DateModified)
                     .ToListAsync();
                 
-                _logger.LogInformation("Found {NoteCount} notes for: {SearchTerm}", 
-                    notes.Count, searchTerm);
-                
+                _logger.LogInformation("Found {NoteCount} notes for: {SearchTerm}", notes.Count, searchTerm);
                 return notes;
             }
             catch (Exception ex)
@@ -191,6 +230,8 @@ namespace NoteApp.Services
         {
             try
             {
+                using var context = CreateContext();
+                
                 if (string.IsNullOrWhiteSpace(category) || category.Equals("All", StringComparison.OrdinalIgnoreCase))
                 {
                     return await GetNotesAsync();
@@ -198,23 +239,13 @@ namespace NoteApp.Services
 
                 _logger.LogDebug("Getting notes for category: {Category}", category);
                 
-                if (_noteCache.Any())
-                {
-                    return _noteCache.Values
-                        .Where(n => n.Category == category)
-                        .OrderByDescending(n => n.DateModified)
-                        .ToList();
-                }
-                
-                var notes = await _context.Notes
+                var notes = await context.Notes
                     .AsNoTracking()
                     .Where(n => n.Category == category)
                     .OrderByDescending(n => n.DateModified)
                     .ToListAsync();
                 
-                _logger.LogInformation("Found {NoteCount} notes in category: {Category}", 
-                    notes.Count, category);
-                
+                _logger.LogInformation("Found {NoteCount} notes in category: {Category}", notes.Count, category);
                 return notes;
             }
             catch (Exception ex)
@@ -228,29 +259,17 @@ namespace NoteApp.Services
         {
             try
             {
+                using var context = CreateContext();
+                
                 _logger.LogDebug("Retrieving categories");
                 
-                List<string> categories;
-                
-                if (_noteCache.Any())
-                {
-                    categories = _noteCache.Values
-                        .Select(n => n.Category)
-                        .Distinct()
-                        .Where(c => !string.IsNullOrEmpty(c))
-                        .OrderBy(c => c)
-                        .ToList();
-                }
-                else
-                {
-                    categories = await _context.Notes
-                        .AsNoTracking()
-                        .Select(n => n.Category)
-                        .Distinct()
-                        .Where(c => !string.IsNullOrEmpty(c))
-                        .OrderBy(c => c)
-                        .ToListAsync();
-                }
+                var categories = await context.Notes
+                    .AsNoTracking()
+                    .Select(n => n.Category)
+                    .Distinct()
+                    .Where(c => !string.IsNullOrEmpty(c))
+                    .OrderBy(c => c)
+                    .ToListAsync();
 
                 var result = new List<string> { "All" };
                 result.AddRange(categories);
@@ -274,19 +293,26 @@ namespace NoteApp.Services
                 await _semaphore.WaitAsync();
                 try
                 {
+                    using var context = CreateContext();
+                    
                     var noteList = notes.ToList();
                     _logger.LogDebug("Deleting {NoteCount} notes", noteList.Count);
                     
-                    _context.Notes.RemoveRange(noteList);
-                    var result = await _context.SaveChangesAsync();
+                    var noteIds = noteList.Select(n => n.Id).ToList();
+                    var notesToDelete = await context.Notes
+                        .Where(n => noteIds.Contains(n.Id))
+                        .ToListAsync();
                     
-                    foreach (var note in noteList)
+                    if (notesToDelete.Any())
                     {
-                        _noteCache.TryRemove(note.Id, out _);
+                        context.Notes.RemoveRange(notesToDelete);
+                        var result = await context.SaveChangesAsync();
+                        
+                        _logger.LogInformation("Deleted {NoteCount} notes", notesToDelete.Count);
+                        return result;
                     }
                     
-                    _logger.LogInformation("Deleted {NoteCount} notes", noteList.Count);
-                    return result;
+                    return 0;
                 }
                 finally
                 {
@@ -304,40 +330,14 @@ namespace NoteApp.Services
         {
             try
             {
-                await _context.Database.CanConnectAsync();
+                using var context = CreateContext();
+                await context.Database.CanConnectAsync();
                 return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Database health check failed");
                 return false;
-            }
-        }
-
-        private async Task RefreshCacheAsync()
-        {
-            try
-            {
-                _logger.LogDebug("Refreshing note cache");
-                
-                var notes = await _context.Notes
-                    .AsNoTracking()
-                    .ToListAsync();
-                
-                _noteCache.Clear();
-                
-                foreach (var note in notes)
-                {
-                    _noteCache.TryAdd(note.Id, note);
-                }
-                
-                _lastCacheRefresh = DateTime.Now;
-                
-                _logger.LogInformation("Cache refreshed with {NoteCount} notes", notes.Count);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error refreshing cache");
             }
         }
     }
