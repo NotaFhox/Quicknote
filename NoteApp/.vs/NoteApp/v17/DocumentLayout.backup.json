@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\NoteQuick\\Quicknote-main(1)\\Quicknote-main\\NoteApp\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{01533841-45CA-2243-2D8F-CA26280867A8}|NoteApp.csproj|d:\\notequick\\quicknote-main(1)\\quicknote-main\\noteapp\\views\\notespage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{01533841-45CA-2243-2D8F-CA26280867A8}|NoteApp.csproj|solutionrelative:views\\notespage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\NoteQuick\\Quicknote-main(1)\\Quicknote-main\\NoteApp\\obj\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:obj\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -25,19 +29,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "NotesPage.xaml",
+              "DocumentMoniker": "D:\\NoteQuick\\Quicknote-main(1)\\Quicknote-main\\NoteApp\\Views\\NotesPage.xaml",
+              "RelativeDocumentMoniker": "Views\\NotesPage.xaml",
+              "ToolTip": "D:\\NoteQuick\\Quicknote-main(1)\\Quicknote-main\\NoteApp\\Views\\NotesPage.xaml",
+              "RelativeToolTip": "Views\\NotesPage.xaml",
+              "ViewState": "AgIAAKQAAAAAAAAAAAAiwL0AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-09-02T04:58:07.922Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "App.g.i.cs",
               "DocumentMoniker": "D:\\NoteQuick\\Quicknote-main(1)\\Quicknote-main\\NoteApp\\obj\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
               "RelativeDocumentMoniker": "obj\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
               "ToolTip": "D:\\NoteQuick\\Quicknote-main(1)\\Quicknote-main\\NoteApp\\obj\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
               "RelativeToolTip": "obj\\Debug\\net9.0-windows10.0.19041.0\\win-x64\\Platforms\\Windows\\App.g.i.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAEwEQAAABEAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-26T05:44:30.987Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "App.xaml.sg.cs",
               "DocumentMoniker": "C:\\Users\\Moka\\AppData\\Local\\Temp\\.vsdbgsrc\\1a81579c1759fb56706014f70b4e946285513968\\App.xaml.sg.cs",
               "ToolTip": "C:\\Users\\Moka\\AppData\\Local\\Temp\\.vsdbgsrc\\1a81579c1759fb56706014f70b4e946285513968\\App.xaml.sg.cs [Read Only]",
@@ -48,7 +65,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Resources_Styles_Styles.xaml.sg.cs",
               "DocumentMoniker": "C:\\Users\\Moka\\AppData\\Local\\Temp\\.vsdbgsrc\\38bbaf2cf93208762947a68c97de0f3567e781bd\\Resources_Styles_Styles.xaml.sg.cs",
               "ToolTip": "C:\\Users\\Moka\\AppData\\Local\\Temp\\.vsdbgsrc\\38bbaf2cf93208762947a68c97de0f3567e781bd\\Resources_Styles_Styles.xaml.sg.cs [Read Only]",

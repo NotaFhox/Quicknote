@@ -1,9 +1,10 @@
-using System.Collections.ObjectModel;
+
 using System.ComponentModel;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Microsoft.Extensions.Logging;
 using NoteApp.Models;
 using NoteApp.Services;
 using NoteApp.Views;
@@ -137,13 +138,18 @@ namespace NoteApp.ViewModels
         public ICommand LoadMoreCommand { get; }
         public ICommand QuickAddNoteCommand { get; }
         public ICommand DeleteSelectedNotesCommand { get; }
-        private readonly ILogger<NotesViewModel> _logger;
-
-        public NotesViewModel(INoteService noteService, ILogger<NotesViewModel> logger)
+        public ICommand ShowHelpCommand { get; }
+        public ICommand OpenSettingsCommand { get; }
+        // Removed duplicate constructor
+        public NotesViewModel(INoteService noteService, ILogger<NotesViewModel>? logger = null) : base(logger)
         {
             _noteService = noteService;
-            _logger = logger;
             Title = "My Notes";
+
+            // Initialize collections
+            Notes = new ObservableCollection<Note>();
+            FilteredNotes = new ObservableCollection<Note>();
+            Categories = new List<string> { "All" };
 
             LoadNotesCommand = CreateAsyncCommand(LoadNotes);
             AddNoteCommand = CreateAsyncCommand(AddNote);
@@ -164,31 +170,8 @@ namespace NoteApp.ViewModels
             LoadMoreCommand = CreateAsyncCommand(LoadMoreNotes);
             QuickAddNoteCommand = CreateAsyncCommand<string>(QuickAddNote);
             DeleteSelectedNotesCommand = CreateAsyncCommand<List<Note>>(DeleteSelectedNotes);
-        }
-        public NotesViewModel(INoteService noteService)
-        {
-            _noteService = noteService;
-            Title = "My Notes";
-
-            LoadNotesCommand = CreateAsyncCommand(LoadNotes);
-            AddNoteCommand = CreateAsyncCommand(AddNote);
-            SelectNoteCommand = CreateAsyncCommand<Note>(SelectNote);
-            DeleteNoteCommand = CreateAsyncCommand<Note>(DeleteNote);
-            SearchCommand = CreateAsyncCommand(SearchNotes);
-            ClearSearchCommand = CreateCommand(() => 
-            {
-                SearchText = string.Empty;
-                _ = LoadNotes();
-            });
-            FilterByCategoryCommand = CreateAsyncCommand(FilterByCategory);
-            RefreshCommand = CreateAsyncCommand(RefreshNotes);
-            ToggleSortOrderCommand = CreateCommand(() => 
-            {
-                SortAscending = !SortAscending;
-            });
-            LoadMoreCommand = CreateAsyncCommand(LoadMoreNotes);
-            QuickAddNoteCommand = CreateAsyncCommand<string>(QuickAddNote);
-            DeleteSelectedNotesCommand = CreateAsyncCommand<List<Note>>(DeleteSelectedNotes);
+            ShowHelpCommand = CreateAsyncCommand(ShowHelp);
+            OpenSettingsCommand = CreateAsyncCommand(OpenSettings);
         }
 
         private async Task LoadNotes()
@@ -359,17 +342,23 @@ namespace NoteApp.ViewModels
         {
             try
             {
+                Logger?.LogDebug("AddNote command triggered");
+                
                 var newNote = new Note
                 {
-                    Title = "New Note",
-                    Content = "",
+                    Title = "",  // Start with empty title
+                    Content = "", // Start with empty content
                     Category = SelectedCategory == "All" ? "General" : SelectedCategory
                 };
+                
+                Logger?.LogDebug("Navigating to NoteDetailPage with new note");
                 
                 await Shell.Current.GoToAsync($"{nameof(NoteDetailPage)}?NoteId=0", new Dictionary<string, object>
                 {
                     ["Note"] = newNote
                 });
+                
+                Logger?.LogDebug("Navigation to NoteDetailPage completed");
             }
             catch (Exception ex)
             {
@@ -396,7 +385,6 @@ namespace NoteApp.ViewModels
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Error creating quick note");
                 Logger?.LogError(ex, "Error creating quick note");
                 await Shell.Current.DisplayAlert("Error", "Could not create note. Please try again.", "OK");
             }
@@ -499,6 +487,51 @@ namespace NoteApp.ViewModels
         public async Task OnAppearing()
         {
             await LoadNotes();
+        }
+
+        private async Task ShowHelp()
+        {
+            var helpText = @"📝 Quicknote Help
+
+
+
+NAVIGATION:
+• Double-click any note to open it
+• Use Open/Delete buttons on each note
+• Click 'New' button to create notes
+
+AUTO-SAVE:
+Notes auto-save as you type 
+Configure auto-save interval in Settings.
+
+ORGANISATION:
+• Add categories: Work, Personal, Ideas, etc.
+• Use tags: comma, separated, tags
+
+CUSTOMISATION:
+• Dark Mode
+• Performance Mode: Optimised for slower devices
+• Font settings and more in Settings
+
+DATABASE:
+Your notes are stored locally on this device.
+
+Version: Quicknote 4.0.0 - Fhox Edition 2025";
+
+            await Shell.Current.DisplayAlert("Help - Quicknote", helpText, "Close");
+        }
+
+        private async Task OpenSettings()
+        {
+            try
+            {
+                await Shell.Current.GoToAsync(nameof(SettingsPage));
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error navigating to settings");
+                await Shell.Current.DisplayAlert("Error", "Could not open settings. Please try again.", "OK");
+            }
         }
 
         protected override void Dispose(bool disposing)

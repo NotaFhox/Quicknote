@@ -11,10 +11,15 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
+            <!-- All required converters -->
             <converters:StringIsNotNullOrEmptyConverter x:Key="StringIsNotNullOrEmptyConverter" />
             <converters:BoolToSortIconConverter x:Key="BoolToSortIconConverter" />
             <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
             <converters:DateTimeToRelativeTimeConverter x:Key="DateTimeToRelativeTimeConverter" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converters:BoolToTextConverter x:Key="BoolToTextConverter" />
+            <converters:CountToBoolConverter x:Key="CountToBoolConverter" />
             
             <OnPlatform x:Key="PagePadding" x:TypeArguments="Thickness">
                 <On Platform="iOS" Value="0,20,0,0" />

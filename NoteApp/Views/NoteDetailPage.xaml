@@ -29,7 +29,7 @@
                     <Label Text="📝"
                            FontSize="16"
                            VerticalOptions="Center" />
-                    <Label Text="Notepad - "
+                    <Label Text="Quicknote - "
                            FontAttributes="Bold"
                            VerticalOptions="Center"
                            FontFamily="MS Sans Serif"
@@ -38,19 +38,33 @@
                            VerticalOptions="Center"
                            FontFamily="MS Sans Serif"
                            FontSize="12" />
+                    <Label Text="●"
+                           VerticalOptions="Center"
+                           FontFamily="MS Sans Serif"
+                           FontSize="12"
+                           TextColor="Orange"
+                           IsVisible="{Binding HasUnsavedChanges}"
+                           ToolTipProperties.Text="Unsaved changes - auto-saving..." />
                 </HorizontalStackLayout>
                 
                 <HorizontalStackLayout Grid.Column="2" Spacing="2">
-                    <Button Text="Save"
+                    <Button Text="💾 Save"
                             Command="{Binding SaveCommand}"
-                            WidthRequest="48"
+                            WidthRequest="60"
                             HeightRequest="22"
                             FontFamily="MS Sans Serif"
                             FontSize="10"
                             Padding="2" />
-                    <Button Text="Close"
+                    <Button Text="❓"
+                            Command="{Binding ShowHelpCommand}"
+                            WidthRequest="22"
+                            HeightRequest="22"
+                            FontFamily="MS Sans Serif"
+                            FontSize="10"
+                            Padding="2" />
+                    <Button Text="✕"
                             Command="{Binding BackCommand}"
-                            WidthRequest="48"
+                            WidthRequest="22"
                             HeightRequest="22"
                             FontFamily="MS Sans Serif"
                             FontSize="10"
@@ -117,7 +131,7 @@
                                 </LinearGradientBrush>
                             </Border.Stroke>
                             <Entry Text="{Binding Note.Title}"
-                                   Placeholder="Enter title..."
+                                   Placeholder="Auto-generated if empty..."
                                    BackgroundColor="Transparent"
                                    FontFamily="MS Sans Serif"
                                    FontSize="11"
@@ -148,6 +162,8 @@
                                     <x:String>Meeting</x:String>
                                     <x:String>Project</x:String>
                                     <x:String>Research</x:String>
+                                    <x:String>Important</x:String>
+                                    <x:String>Archive</x:String>
                                 </x:Array>
                             </Picker.ItemsSource>
                         </Picker>
@@ -175,7 +191,7 @@
                                 </LinearGradientBrush>
                             </Border.Stroke>
                             <Entry Text="{Binding Note.Tags}"
-                                   Placeholder="comma, separated, tags"
+                                   Placeholder="comma, separated, tags, for, organisation"
                                    BackgroundColor="Transparent"
                                    FontFamily="MS Sans Serif"
                                    FontSize="11"
@@ -195,6 +211,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         
                         <HorizontalStackLayout Grid.Column="0" Spacing="4">
@@ -217,7 +234,18 @@
                                    FontFamily="MS Sans Serif" />
                         </HorizontalStackLayout>
                         
-                        <HorizontalStackLayout Grid.Column="2" Spacing="4" HorizontalOptions="End">
+                        <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                            <Label Text="Auto-save:"
+                                   FontAttributes="Bold"
+                                   FontSize="9"
+                                   FontFamily="MS Sans Serif" />
+                            <Label Text="ON"
+                                   FontSize="9"
+                                   FontFamily="MS Sans Serif"
+                                   TextColor="Green" />
+                        </HorizontalStackLayout>
+                        
+                        <HorizontalStackLayout Grid.Column="3" Spacing="4">
                             <Label Text="ID:"
                                    FontAttributes="Bold"
                                    FontSize="9"
@@ -244,9 +272,9 @@
                     </Border.Stroke>
                     
                     <Editor Text="{Binding Note.Content}"
-                            Placeholder="Start typing..."
+                            Placeholder="Start typing your note here... (auto-saves as you type)"
                             FontFamily="Courier New"
-                            FontSize="11"
+                            FontSize="12"
                             AutoSize="TextChanges"
                             BackgroundColor="Transparent"
                             MinimumHeightRequest="400"
@@ -282,16 +310,25 @@
                         BackgroundColor="{StaticResource Gray100}"
                         Padding="4,0"
                         Margin="0,0,8,0">
-                    <Label Text="Press F1 for Help"
-                           VerticalOptions="Center"
-                           FontFamily="MS Sans Serif"
-                           FontSize="10" />
+                    <HorizontalStackLayout Spacing="8">
+                        <Button Text="❓"
+                                Command="{Binding ShowHelpCommand}"
+                                WidthRequest="24"
+                                HeightRequest="20"
+                                FontFamily="MS Sans Serif"
+                                FontSize="10"
+                                Padding="0" />
+                        <Label Text="Auto-save: 3sec delay, then configurable interval • Press ❓ for help"
+                               VerticalOptions="Center"
+                               FontFamily="MS Sans Serif"
+                               FontSize="10" />
+                    </HorizontalStackLayout>
                 </Border>
                 
                 <HorizontalStackLayout Grid.Column="1" Spacing="4">
-                    <Button Text="💾 Save"
+                    <Button Text="💾 Save Now"
                             Command="{Binding SaveCommand}"
-                            WidthRequest="60"
+                            WidthRequest="80"
                             HeightRequest="24"
                             FontFamily="MS Sans Serif"
                             FontSize="10"
@@ -299,7 +336,18 @@
                             TextColor="White"
                             Padding="2" />
                     
-                    <Button Text="Cancel"
+                    <Button Text="🗑 Delete"
+                            Command="{Binding DeleteCommand}"
+                            WidthRequest="56"
+                            HeightRequest="24"
+                            FontFamily="MS Sans Serif"
+                            FontSize="10"
+                            BackgroundColor="{StaticResource ClassicRed}"
+                            TextColor="White"
+                            Padding="2"
+                            IsVisible="{Binding CanDelete}" />
+                    
+                    <Button Text="← Back"
                             Command="{Binding BackCommand}"
                             WidthRequest="56"
                             HeightRequest="24"

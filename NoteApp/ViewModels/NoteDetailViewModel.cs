@@ -1,7 +1,8 @@
-using System.Windows.Input;
+
 using NoteApp.Models;
 using NoteApp.Services;
 using Microsoft.Extensions.Logging;
+using System.Windows.Input;
 
 namespace NoteApp.ViewModels
 {
@@ -10,12 +11,14 @@ namespace NoteApp.ViewModels
     public class NoteDetailViewModel : BaseViewModel
     {
         private readonly INoteService _noteService;
+        private readonly ISettingsService _settingsService;
         private Note _note = new();
         private Note? _originalNote;
         private Timer? _autoSaveTimer;
         private bool _hasUnsavedChanges;
         private string _lastSavedTitle = string.Empty;
         private string _lastSavedContent = string.Empty;
+        private bool _isNavigating = false;
 
         public Note Note
         {
@@ -33,6 +36,7 @@ namespace NoteApp.ViewModels
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(IsNewNote));
                     OnPropertyChanged(nameof(CanSave));
+                    OnPropertyChanged(nameof(CanDelete));
                     
                     _lastSavedTitle = _note.Title;
                     _lastSavedContent = _note.Content;
@@ -44,7 +48,10 @@ namespace NoteApp.ViewModels
 
         public int NoteId { get; set; }
         public bool IsNewNote => NoteId == 0;
-        public bool CanSave => !string.IsNullOrWhiteSpace(Note.Title) || !string.IsNullOrWhiteSpace(Note.Content);
+        public bool CanSave => !IsBusy; // Always allow saving, we'll handle empty content in the save method
+        public bool CanDelete => !IsBusy && !IsNewNote;
+        public bool CanGoBack => !IsBusy;
+        
         public bool HasUnsavedChanges
         {
             get => _hasUnsavedChanges;
@@ -58,37 +65,59 @@ namespace NoteApp.ViewModels
         public ICommand SaveCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand DeleteCommand { get; }
+        public ICommand ShowHelpCommand { get; }
 
-        public NoteDetailViewModel(INoteService noteService, ILogger<NoteDetailViewModel>? logger = null) : base(logger)
+        public NoteDetailViewModel(INoteService noteService, ISettingsService settingsService, ILogger<NoteDetailViewModel>? logger = null) : base(logger)
         {
             _noteService = noteService;
-            SaveCommand = CreateAsyncCommand(SaveNote, () => CanSave);
-            BackCommand = CreateAsyncCommand(HandleBackNavigation);
-            DeleteCommand = CreateAsyncCommand(DeleteNote, () => !IsNewNote);
+            _settingsService = settingsService;
+            
+            // Create commands with simpler logic
+            SaveCommand = new Command(async () => await SaveNote(), () => CanSave);
+            BackCommand = new Command(async () => await HandleBackNavigation(), () => CanGoBack);
+            DeleteCommand = new Command(async () => await DeleteNote(), () => CanDelete);
+            ShowHelpCommand = new Command(async () => await ShowHelp());
         }
 
         public async Task LoadNote()
         {
-            if (NoteId > 0)
+            try
             {
-                var note = await _noteService.GetNoteAsync(NoteId);
-                if (note != null)
+                if (NoteId > 0)
                 {
-                    _originalNote = new Note(note);
-                    Note = note;
-                    Title = Note.Title;
+                    var note = await _noteService.GetNoteAsync(NoteId);
+                    if (note != null)
+                    {
+                        _originalNote = new Note(note);
+                        Note = new Note(note); // Create a copy to avoid tracking issues
+                        Title = Note.Title;
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Error", "Note not found.", "OK");
+                        await Shell.Current.GoToAsync("..");
+                        return;
+                    }
                 }
-            }
-            else
-            {
-                Title = "New Note";
-                Note = new Note
+                else
                 {
-                    Category = "General"
-                };
+                    Title = "New Note";
+                    Note = new Note
+                    {
+                        Category = "General",
+                        Title = "",
+                        Content = ""
+                    };
+                }
+                
+                StartAutoSave();
+                RefreshCommandStates();
             }
-            
-            StartAutoSave();
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error loading note {NoteId}", NoteId);
+                await Shell.Current.DisplayAlert("Error", "Could not load note. Please try again.", "OK");
+            }
         }
 
         private void OnNotePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -97,9 +126,24 @@ namespace NoteApp.ViewModels
             {
                 CheckForChanges();
                 OnPropertyChanged(nameof(CanSave));
-                ((Command)SaveCommand).ChangeCanExecute();
+                OnPropertyChanged(nameof(CanDelete));
+                RefreshCommandStates();
                 
                 RestartAutoSaveTimer();
+            }
+        }
+
+        private void RefreshCommandStates()
+        {
+            try
+            {
+                ((Command)SaveCommand).ChangeCanExecute();
+                ((Command)BackCommand).ChangeCanExecute();
+                ((Command)DeleteCommand).ChangeCanExecute();
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error refreshing command states");
             }
         }
 
@@ -111,29 +155,71 @@ namespace NoteApp.ViewModels
         private void StartAutoSave()
         {
             _autoSaveTimer?.Dispose();
-            _autoSaveTimer = new Timer(async _ => await AutoSave(), null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+            
+            // Use settings service if available, otherwise use defaults
+            bool autoSaveEnabled = _settingsService?.Settings?.AutoSaveEnabled ?? true;
+            int autoSaveInterval = _settingsService?.Settings?.AutoSaveInterval ?? 10;
+            
+            if (autoSaveEnabled)
+            {
+                var interval = TimeSpan.FromSeconds(autoSaveInterval);
+                // Auto-save after initial 5 second delay, then at configured interval
+                _autoSaveTimer = new Timer(async _ => await AutoSave(), null, TimeSpan.FromSeconds(5), interval);
+            }
         }
 
         private void RestartAutoSaveTimer()
         {
-            _autoSaveTimer?.Change(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(30));
+            // Use settings service if available, otherwise use defaults
+            bool autoSaveEnabled = _settingsService?.Settings?.AutoSaveEnabled ?? true;
+            int autoSaveInterval = _settingsService?.Settings?.AutoSaveInterval ?? 10;
+            
+            if (autoSaveEnabled)
+            {
+                var interval = TimeSpan.FromSeconds(autoSaveInterval);
+                // Restart timer - save after 3 seconds of no typing, then at configured interval
+                _autoSaveTimer?.Change(TimeSpan.FromSeconds(3), interval);
+            }
         }
 
         private async Task AutoSave()
         {
-            if (HasUnsavedChanges && CanSave)
+            // Use settings service if available, otherwise use defaults
+            bool autoSaveEnabled = _settingsService?.Settings?.AutoSaveEnabled ?? true;
+            
+            if (HasUnsavedChanges && !IsBusy && !_isNavigating && autoSaveEnabled)
             {
                 try
                 {
-                    await _noteService.SaveNoteAsync(Note);
-                    _lastSavedTitle = Note.Title;
-                    _lastSavedContent = Note.Content;
-                    
-                    MainThread.BeginInvokeOnMainThread(() =>
+                    // Only auto-save if we have some content
+                    if (!string.IsNullOrWhiteSpace(Note.Title) || !string.IsNullOrWhiteSpace(Note.Content))
                     {
-                        HasUnsavedChanges = false;
-                        Logger?.LogDebug("Auto-saved note: {NoteTitle}", Note.Title);
-                    });
+                        // If no title, generate one for auto-save
+                        if (string.IsNullOrWhiteSpace(Note.Title))
+                        {
+                            Note.Title = GenerateDefaultTitle();
+                        }
+
+                        await _noteService.SaveNoteAsync(Note);
+                        
+                        // Update the NoteId if this was a new note
+                        if (IsNewNote && Note.Id > 0)
+                        {
+                            NoteId = Note.Id;
+                            OnPropertyChanged(nameof(IsNewNote));
+                            OnPropertyChanged(nameof(CanDelete));
+                            RefreshCommandStates();
+                        }
+                        
+                        _lastSavedTitle = Note.Title;
+                        _lastSavedContent = Note.Content;
+                        
+                        await MainThread.InvokeOnMainThreadAsync(() =>
+                        {
+                            HasUnsavedChanges = false;
+                            Logger?.LogDebug("Auto-saved note: {NoteTitle}", Note.Title);
+                        });
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -144,65 +230,131 @@ namespace NoteApp.ViewModels
 
         private async Task SaveNote()
         {
-            if (!CanSave) return;
-
-            if (IsNewNote && string.IsNullOrWhiteSpace(Note.Title))
+            if (IsBusy) return;
+            
+            try
             {
-                Note.Title = GenerateDefaultTitle();
-            }
+                IsBusy = true;
+                
+                // If both title and content are empty, create a default note
+                if (string.IsNullOrWhiteSpace(Note.Title) && string.IsNullOrWhiteSpace(Note.Content))
+                {
+                    Note.Title = GenerateDefaultTitle();
+                    Note.Content = ""; // Empty content is fine
+                }
+                else if (string.IsNullOrWhiteSpace(Note.Title))
+                {
+                    // If only title is empty, generate from content or use default
+                    Note.Title = GenerateDefaultTitle();
+                }
 
-            var noteId = await _noteService.SaveNoteAsync(Note);
-            NoteId = noteId;
-            Note.Id = noteId;
-            
-            _lastSavedTitle = Note.Title;
-            _lastSavedContent = Note.Content;
-            HasUnsavedChanges = false;
-            
-            OnPropertyChanged(nameof(IsNewNote));
-            ((Command)DeleteCommand).ChangeCanExecute();
-            
-            await Shell.Current.DisplayAlert("Saved", "Your note has been saved successfully.", "OK");
+                Logger?.LogDebug("Saving note: {NoteTitle}", Note.Title);
+
+                var noteId = await _noteService.SaveNoteAsync(Note);
+                NoteId = noteId;
+                Note.Id = noteId;
+                
+                _lastSavedTitle = Note.Title;
+                _lastSavedContent = Note.Content;
+                HasUnsavedChanges = false;
+                
+                OnPropertyChanged(nameof(IsNewNote));
+                OnPropertyChanged(nameof(CanSave));
+                OnPropertyChanged(nameof(CanDelete));
+                RefreshCommandStates();
+                
+                await Shell.Current.DisplayAlert("Saved", "Your note has been saved successfully.", "OK");
+                
+                Logger?.LogInformation("Successfully saved note with ID: {NoteId}", noteId);
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error saving note");
+                await Shell.Current.DisplayAlert("Error", "Could not save note. Please try again.", "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+                RefreshCommandStates();
+            }
         }
 
         private async Task DeleteNote()
         {
-            if (IsNewNote) return;
+            if (IsNewNote || IsBusy) return;
 
-            bool confirm = await Shell.Current.DisplayAlert("Delete Note", 
-                $"Are you sure you want to delete '{Note.Title}'?", "Yes", "No");
-            
-            if (confirm)
+            try
             {
-                await _noteService.DeleteNoteAsync(Note);
-                await Shell.Current.GoToAsync("..");
+                bool confirm = await Shell.Current.DisplayAlert("Delete Note", 
+                    $"Are you sure you want to delete '{Note.Title}'?", "Yes", "No");
+                
+                if (confirm)
+                {
+                    IsBusy = true;
+                    _isNavigating = true;
+                    
+                    Logger?.LogDebug("Deleting note: {NoteId}", Note.Id);
+                    
+                    await _noteService.DeleteNoteAsync(Note);
+                    await Shell.Current.GoToAsync("..");
+                    
+                    Logger?.LogInformation("Successfully deleted note: {NoteId}", Note.Id);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error deleting note");
+                await Shell.Current.DisplayAlert("Error", "Could not delete note. Please try again.", "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+                _isNavigating = false;
+                RefreshCommandStates();
             }
         }
 
         private async Task HandleBackNavigation()
         {
-            if (HasUnsavedChanges)
+            if (IsBusy) return;
+
+            try
             {
-                var result = await Shell.Current.DisplayAlert("Unsaved Changes", 
-                    "You have unsaved changes. Do you want to save before leaving?", 
-                    "Save", "Don't Save");
-                
-                if (result == true)
+                IsBusy = true;
+                _isNavigating = true;
+
+                if (HasUnsavedChanges)
                 {
-                    if (CanSave)
+                    var result = await Shell.Current.DisplayAlert("Unsaved Changes", 
+                        "You have unsaved changes. Do you want to save before leaving?", 
+                        "Save", "Don't Save");
+                    
+                    if (result == true)
                     {
-                        await SaveNote();
-                        await Shell.Current.GoToAsync("..");
+                        if (CanSave)
+                        {
+                            if (IsNewNote && string.IsNullOrWhiteSpace(Note.Title))
+                            {
+                                Note.Title = GenerateDefaultTitle();
+                            }
+                            
+                            await _noteService.SaveNoteAsync(Note);
+                            Logger?.LogInformation("Auto-saved note before navigation");
+                        }
                     }
                 }
-                else if (result == false)
-                {
-                    await Shell.Current.GoToAsync("..");
-                }
-            }
-            else
-            {
+                
                 await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error during back navigation");
+                await Shell.Current.GoToAsync("..");
+            }
+            finally
+            {
+                IsBusy = false;
+                _isNavigating = false;
             }
         }
 
@@ -216,7 +368,42 @@ namespace NoteApp.ViewModels
                     return firstLine.Length > 50 ? firstLine[..50] + "..." : firstLine;
                 }
             }
-            return $"Note {DateTime.Now:dd/MM/yyyy HH:mm}";
+            return $"New Note {DateTime.Now:dd/MM/yyyy HH:mm}";
+        }
+
+        private async Task ShowHelp()
+        {
+            var helpText = @"📝 Quicknote Help
+
+EDITING FEATURES:
+Auto-save
+Auto-title generation
+Organise notes by category
+Add comma-separated tags for better organisation
+
+
+AUTO-SAVE:
+• Saves 3 seconds after you stop typing
+• Then saves every 10 seconds while editing
+• Configure auto-save settings in the main Settings menu
+• Orange dot (●) shows when there are unsaved changes
+
+SHORTCUTS & NAVIGATION:
+• Save button: Force save current note
+• Delete button: Remove current note (with confirmation)
+• Back button: Return to notes list (prompts to save if needed)
+• Help button: Show this help menu
+
+CUSTOMISATION:
+Visit Settings from the main screen to:
+• Enable Dark Mode
+• Adjust Performance Mode
+• Configure auto-save intervals
+• Change default category
+
+Version: Quicknote 4.0.0 - Fhox Edition 2025";
+
+            await Shell.Current.DisplayAlert("Help - Quicknote", helpText, "Close");
         }
 
         protected override void Dispose(bool disposing)

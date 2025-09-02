@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NoteApp.Views.SettingsPage"
+             x:DataType="viewModels:SettingsViewModel"
+             xmlns:viewModels="clr-namespace:NoteApp.ViewModels"
+             Title="Settings - Quicknote"
+             BackgroundColor="{StaticResource WindowsBeige}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0"
+                StrokeThickness="2"
+                Stroke="{StaticResource ButtonShadow}"
+                BackgroundColor="{StaticResource ButtonFace}">
+            <Grid Padding="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <HorizontalStackLayout Grid.Column="0" Spacing="8">
+                    <Label Text="⚙️"
+                           FontSize="16"
+                           VerticalOptions="Center" />
+                    <Label Text="Settings - Quicknote"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"
+                           FontFamily="MS Sans Serif"
+                           FontSize="14" />
+                </HorizontalStackLayout>
+                
+                <Button Grid.Column="2"
+                        Text="✕ Close"
+                        Command="{Binding BackCommand}"
+                        WidthRequest="60"
+                        HeightRequest="24"
+                        FontFamily="MS Sans Serif"
+                        FontSize="10"
+                        Padding="2" />
+            </Grid>
+        </Border>
+
+        <!-- Settings Content -->
+        <ScrollView Grid.Row="1" Padding="8">
+            <VerticalStackLayout Spacing="12">
+                
+                <!-- Appearance Settings -->
+                <Border Style="{StaticResource ContentFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🎨 Appearance"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               FontFamily="MS Sans Serif" />
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="Dark Mode"
+                                       FontAttributes="Bold"
+                                       FontFamily="MS Sans Serif"
+                                       FontSize="12" />
+                                <Label Text="Switch to dark theme for better visibility in low light"
+                                       FontFamily="MS Sans Serif"
+                                       FontSize="10"
+                                       TextColor="{StaticResource Gray600}" />
+                            </VerticalStackLayout>
+                            
+                            <Switch Grid.Column="1"
+                                    IsToggled="{Binding Settings.IsDarkMode}"
+                                    VerticalOptions="Center" />
+                        </Grid>
+                        
+                        <BoxView HeightRequest="1" BackgroundColor="{StaticResource Gray300}" />
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="Font Family:"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,8,0"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="12" />
+                            
+                            <Picker Grid.Row="0" Grid.Column="1"
+                                    ItemsSource="{Binding FontFamilies}"
+                                    SelectedItem="{Binding Settings.FontFamily}"
+                                    FontFamily="MS Sans Serif"
+                                    FontSize="11" />
+                            
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="Font Size:"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   Margin="0,8,8,0"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="12" />
+                            
+                            <Picker Grid.Row="1" Grid.Column="1"
+                                    ItemsSource="{Binding FontSizes}"
+                                    SelectedItem="{Binding Settings.FontSize}"
+                                    FontFamily="MS Sans Serif"
+                                    FontSize="11"
+                                    Margin="0,8,0,0" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Performance Settings -->
+                <Border Style="{StaticResource ContentFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="⚡ Performance"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               FontFamily="MS Sans Serif" />
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="Performance Mode"
+                                       FontAttributes="Bold"
+                                       FontFamily="MS Sans Serif"
+                                       FontSize="12" />
+                                <Label Text="Reduces animations and effects for better performance on slower devices"
+                                       FontFamily="MS Sans Serif"
+                                       FontSize="10"
+                                       TextColor="{StaticResource Gray600}" />
+                            </VerticalStackLayout>
+                            
+                            <Switch Grid.Column="1"
+                                    IsToggled="{Binding Settings.IsPerformanceMode}"
+                                    VerticalOptions="Center" />
+                        </Grid>
+                        
+                        <BoxView HeightRequest="1" BackgroundColor="{StaticResource Gray300}" />
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="Auto-Save"
+                                       FontAttributes="Bold"
+                                       FontFamily="MS Sans Serif"
+                                       FontSize="12" />
+                                <Label Text="Automatically save changes as you type"
+                                       FontFamily="MS Sans Serif"
+                                       FontSize="10"
+                                       TextColor="{StaticResource Gray600}" />
+                            </VerticalStackLayout>
+                            
+                            <Switch Grid.Column="1"
+                                    IsToggled="{Binding Settings.AutoSaveEnabled}"
+                                    VerticalOptions="Center" />
+                        </Grid>
+                        
+                        <Grid IsVisible="{Binding Settings.AutoSaveEnabled}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Column="0"
+                                   Text="Interval:"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,8,0"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="12" />
+                            
+                            <Picker Grid.Column="1"
+                                    ItemsSource="{Binding AutoSaveIntervals}"
+                                    SelectedItem="{Binding Settings.AutoSaveInterval}"
+                                    FontFamily="MS Sans Serif"
+                                    FontSize="11" />
+                            
+                            <Label Grid.Column="2"
+                                   Text="seconds"
+                                   VerticalOptions="Center"
+                                   Margin="8,0,0,0"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="12" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Editor Settings -->
+                <Border Style="{StaticResource ContentFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="📝 Editor"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               FontFamily="MS Sans Serif" />
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Column="0"
+                                   Text="Default Category:"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,8,0"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="12" />
+                            
+                            <Picker Grid.Column="1"
+                                    ItemsSource="{Binding AvailableCategories}"
+                                    SelectedItem="{Binding Settings.DefaultCategory}"
+                                    FontFamily="MS Sans Serif"
+                                    FontSize="11" />
+                        </Grid>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="Show Line Numbers"
+                                       FontAttributes="Bold"
+                                       FontFamily="MS Sans Serif"
+                                       FontSize="12" />
+                                <Label Text="Display line numbers in the editor (coming soon)"
+                                       FontFamily="MS Sans Serif"
+                                       FontSize="10"
+                                       TextColor="{StaticResource Gray600}" />
+                            </VerticalStackLayout>
+                            
+                            <Switch Grid.Column="1"
+                                    IsToggled="{Binding Settings.ShowLineNumbers}"
+                                    IsEnabled="False"
+                                    VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- About Section -->
+                <Border Style="{StaticResource ContentFrame}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="ℹ️ About"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               FontFamily="MS Sans Serif" />
+                        
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Quicknote"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   FontFamily="MS Sans Serif"
+                                   HorizontalTextAlignment="Center" />
+                            
+                            <Label Text="Version 4.0.0 - Fhox Edition 2025"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="12"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{StaticResource Gray600}" />
+                            
+                            <Label Text="A simple, fast note-taking app built for performance"
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="11"
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,8,0,0" />
+                            
+                            <Label Text=""
+                                   FontFamily="MS Sans Serif"
+                                   FontSize="10"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{StaticResource Gray600}" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Danger Zone -->
+                <Border BackgroundColor="{StaticResource ClassicRed}"
+                        StrokeThickness="2"
+                        Stroke="{StaticResource ButtonShadow}"
+                        Padding="12">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="⚠️ Danger Zone"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               FontFamily="MS Sans Serif" />
+                        
+                        <HorizontalStackLayout Spacing="8">
+                            <Button Text="Reset Settings"
+                                    Command="{Binding ResetSettingsCommand}"
+                                    BackgroundColor="White"
+                                    TextColor="{StaticResource ClassicRed}"
+                                    FontFamily="MS Sans Serif"
+                                    FontSize="11"
+                                    Padding="8,4" />
+                            
+                            <Button Text="🗑 Clear All Data"
+                                    Command="{Binding ClearDataCommand}"
+                                    BackgroundColor="DarkRed"
+                                    TextColor="White"
+                                    FontFamily="MS Sans Serif"
+                                    FontSize="11"
+                                    Padding="8,4" />
+                        </HorizontalStackLayout>
+                        
+                        <Label Text="⚠️ Warning: Clear All Data will permanently delete ALL your notes!"
+                               FontSize="10"
+                               TextColor="White"
+                               FontFamily="MS Sans Serif"
+                               FontAttributes="Italic" />
+                    </VerticalStackLayout>
+                </Border>
+                
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Footer -->
+        <Border Grid.Row="2"
+                StrokeThickness="2"
+                BackgroundColor="{StaticResource ButtonFace}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0" />
+            </Border.StrokeShape>
+            <Border.Stroke>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="{StaticResource White}" Offset="0.0" />
+                    <GradientStop Color="{StaticResource Gray300}" Offset="0.5" />
+                    <GradientStop Color="{StaticResource Gray700}" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Stroke>
+            
+            <Grid Padding="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <Label Grid.Column="0"
+                       Text="Settings are automatically saved"
+                       VerticalOptions="Center"
+                       FontFamily="MS Sans Serif"
+                       FontSize="10" />
+                
+                <Button Grid.Column="1"
+                        Text="← Back to Notes"
+                        Command="{Binding BackCommand}"
+                        FontFamily="MS Sans Serif"
+                        FontSize="11"
+                        Padding="8,4" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

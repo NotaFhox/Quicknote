@@ -71,3 +71,9 @@ build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = NoteApp.Views.NotesPage.xaml
 build_metadata.AdditionalFiles.TargetPath = Views\NotesPage.xaml
 build_metadata.AdditionalFiles.RelativePath = Views\NotesPage.xaml
+
+[D:/NoteQuick/Quicknote-main(1)/Quicknote-main/NoteApp/Views/SettingsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = NoteApp.Views.SettingsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\SettingsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\SettingsPage.xaml

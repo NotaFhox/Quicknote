@@ -18,5 +18,12 @@ namespace NoteApp.Views
             base.OnAppearing();
             await _viewModel.OnAppearing();
         }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            
+            _viewModel.ClearSearchCommand.Execute(null);
+        }
     }
 }

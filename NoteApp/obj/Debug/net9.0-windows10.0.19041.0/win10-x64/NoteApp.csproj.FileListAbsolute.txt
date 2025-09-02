@@ -1630,11 +1630,6 @@ D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\splashSplashScreen.scale-400.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\OpenSans-Regular.ttf
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\OpenSans-Semibold.ttf
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-400.png
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-200.png
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-150.png
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-125.png
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-100.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\appiconLargeTile.scale-400.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\appiconLargeTile.scale-200.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\appiconLargeTile.scale-150.png
@@ -1681,6 +1676,11 @@ D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\appiconLogo.scale-125.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\appiconLogo.scale-100.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\appicon.ico
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-400.png
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-200.png
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-150.png
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-125.png
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dotnet_bot.scale-100.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\runtimes\win-x64\native\WebView2Loader.dll
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\CoreMessagingXP.dll
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dcompi.dll
@@ -2095,11 +2095,6 @@ D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\mauifont.stamp
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\f\OpenSans-Regular.ttf
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\f\OpenSans-Semibold.ttf
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-400.png
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-200.png
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-150.png
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-125.png
-D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-100.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\appiconLargeTile.scale-400.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\appiconLargeTile.scale-200.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\appiconLargeTile.scale-150.png
@@ -2146,6 +2141,11 @@ D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\appiconLogo.scale-125.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\appiconLogo.scale-100.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\appicon.ico
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-400.png
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-200.png
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-150.png
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-125.png
+D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dotnet_bot.scale-100.png
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\mauiimage.stamp
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\mauiimage.outputs
 D:\NoteQuick\Quicknote-main(1)\Quicknote-main\NoteApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\NoteApp.AssemblyInfoInputs.cache

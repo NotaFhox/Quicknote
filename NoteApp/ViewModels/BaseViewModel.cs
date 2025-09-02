@@ -81,7 +81,7 @@ namespace NoteApp.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        
+        // Simplified async execution without complex command wrapping
         protected virtual async Task ExecuteAsync(Func<Task> operation, [System.Runtime.CompilerServices.CallerMemberName] string? operationName = null)
         {
             if (IsBusy)
@@ -151,62 +151,49 @@ namespace NoteApp.ViewModels
             ErrorMessage = string.Empty;
         }
 
-        
+        // Simplified command creation methods
         protected Command CreateCommand(Action execute, Func<bool>? canExecute = null)
         {
-            return new Command(
-                execute: () =>
-                {
-                    try
-                    {
-                        execute();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger?.LogError(ex, "Error executing command");
-                        HandleError(ex);
-                    }
-                },
-                canExecute: canExecute ?? (() => true) // Default to always executable
-            );
+            return new Command(execute, canExecute ?? (() => true));
         }
 
         protected Command CreateAsyncCommand(Func<Task> execute, Func<bool>? canExecute = null)
         {
-            return new Command(
-                execute: async () => await ExecuteAsync(execute),
-                canExecute: canExecute ?? (() => true)
-            );
+            return new Command(async () =>
+            {
+                try
+                {
+                    await execute();
+                }
+                catch (Exception ex)
+                {
+                    Logger?.LogError(ex, "Error in async command");
+                    HandleError(ex);
+                }
+            }, canExecute ?? (() => true));
         }
 
         protected Command<T> CreateCommand<T>(Action<T> execute, Func<T, bool>? canExecute = null)
         {
-            return new Command<T>(
-                execute: (parameter) =>
-                {
-                    try
-                    {
-                        execute(parameter);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger?.LogError(ex, "Error executing command with parameter");
-                        HandleError(ex);
-                    }
-                },
-                canExecute: canExecute
-            );
+            return new Command<T>(execute, canExecute ?? (_ => true));
         }
 
         protected Command<T> CreateAsyncCommand<T>(Func<T, Task> execute, Func<T, bool>? canExecute = null)
         {
-            return new Command<T>(
-                execute: async (parameter) => await ExecuteAsync(() => execute(parameter)),
-                canExecute: canExecute ?? (_ => true) // Default to always executable
-            );
+            return new Command<T>(async (parameter) =>
+            {
+                try
+                {
+                    await execute(parameter);
+                }
+                catch (Exception ex)
+                {
+                    Logger?.LogError(ex, "Error in async command with parameter");
+                    HandleError(ex);
+                }
+            }, canExecute ?? (_ => true));
         }
 
-       
         public void Dispose()
         {
             Dispose(true);
@@ -217,7 +204,6 @@ namespace NoteApp.ViewModels
         {
             if (!_disposed && disposing)
             {
-                
                 Logger?.LogDebug("Disposing {ViewModelType}", GetType().Name);
                 _disposed = true;
             }
