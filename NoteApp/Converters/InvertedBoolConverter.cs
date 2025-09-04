@@ -2,6 +2,11 @@ using System.Globalization;
 
 namespace NoteApp.Converters
 {
+    // |---------------------|
+    // |                     |
+    // | Inverted Converter  |
+    // |                     |
+    // |---------------------|
     public class InvertedBoolConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -23,6 +28,11 @@ namespace NoteApp.Converters
         }
     }
 
+    // |---------------------|
+    // |                     |
+    // |   Text Converter    |
+    // |                     |
+    // |---------------------|
     public class BoolToTextConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -40,6 +50,11 @@ namespace NoteApp.Converters
         }
     }
 
+    // |---------------------|
+    // |                     |
+    // |   Count Converter   |
+    // |                     |
+    // |---------------------|
     public class CountToBoolConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

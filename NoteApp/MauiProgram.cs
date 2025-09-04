@@ -9,9 +9,13 @@ namespace NoteApp;
 
 public static class MauiProgram
 {
+    // ┌──────────────────────────────────────────────────┐
+    // │ This is the entry point for the MAUI application.│
+    // └──────────────────────────────────────────────────┘
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
+
         builder
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
@@ -22,45 +26,47 @@ public static class MauiProgram
 
         var dbPath = Path.Combine(FileSystem.AppDataDirectory, "notes.db");
         
-       
+        // Register the database context
         builder.Services.AddDbContext<NoteDbContext>(options =>
         {
             options.UseSqlite($"Data Source={dbPath}");
-           
+            
 #if DEBUG
             options.EnableSensitiveDataLogging();
             options.EnableDetailedErrors();
 #endif
         }, ServiceLifetime.Scoped);
 
-       
+        // ┌──────────────────────────────────────────────────┐
+        // │ Register services, ViewModels, and Pages for     │
+        // │ dependency injection.                            │
+        // └──────────────────────────────────────────────────┘
         builder.Services.AddSingleton<ISettingsService, SettingsService>();
         builder.Services.AddScoped<INoteService, DatabaseNoteService>();
         
-       
         builder.Services.AddTransient<NotesViewModel>();
         builder.Services.AddTransient<NoteDetailViewModel>();
         builder.Services.AddTransient<SettingsViewModel>();
-        
         
         builder.Services.AddTransient<NotesPage>();
         builder.Services.AddTransient<NoteDetailPage>();
         builder.Services.AddTransient<SettingsPage>();
 
-        
+        // Configure logging
 #if DEBUG
         builder.Logging.AddDebug();
         builder.Logging.SetMinimumLevel(LogLevel.Debug);
 #else
         builder.Logging.SetMinimumLevel(LogLevel.Warning);
 #endif
-
+        
         var app = builder.Build();
 
-        
+        // ┌──────────────────────────────────────────────────┐
+        // │ Initialize services and the database on startup. │
+        // └──────────────────────────────────────────────────┘
         try
         {
-           
             var settingsService = app.Services.GetRequiredService<ISettingsService>();
             settingsService.LoadSettings();
             
@@ -72,17 +78,15 @@ public static class MauiProgram
             System.Diagnostics.Debug.WriteLine($"Settings initialization error: {ex.Message}");
         }
 
-        
         try
         {
             using var scope = app.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<NoteDbContext>();
             
-       
             context.Database.EnsureCreated();
             
             System.Diagnostics.Debug.WriteLine($"Database initialized successfully at {dbPath}");
-           
+            
             var noteService = scope.ServiceProvider.GetRequiredService<INoteService>();
             var isHealthy = noteService.IsHealthyAsync().GetAwaiter().GetResult();
             System.Diagnostics.Debug.WriteLine($"Database health check: {isHealthy}");

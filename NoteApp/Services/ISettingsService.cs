@@ -1,8 +1,12 @@
-// ENHANCED ISettingsService.cs - Apply dark mode to ALL pages
 using NoteApp.Models;
 
 namespace NoteApp.Services
 {
+    // |---------------------|
+    // |                     |
+    // |     Interface       |
+    // |                     |
+    // |---------------------|
     public interface ISettingsService
     {
         AppSettings Settings { get; }
@@ -13,35 +17,48 @@ namespace NoteApp.Services
         void ApplyTheme();
     }
 
+    // |---------------------|
+    // |                     |
+    // |  Service Class      |
+    // |                     |
+    // |---------------------|
     public class SettingsService : ISettingsService
     {
         private readonly AppSettings _settings;
-        private bool _isApplyingTheme = false; // Prevent recursion
+        private bool _isApplyingTheme = false;
         
         public AppSettings Settings => _settings;
         
         public event EventHandler<AppSettings>? SettingsChanged;
 
+        // |---------------------|
+        // |                     |
+        // |    Constructor      |
+        // |                     |
+        // |---------------------|
         public SettingsService()
         {
             _settings = new AppSettings();
             _settings.PropertyChanged += OnSettingsPropertyChanged;
             
-            // Load settings immediately
             LoadSettings();
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Event Handlers    |
+        // |                     |
+        // |---------------------|
         private async void OnSettingsPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             try
             {
-                if (_isApplyingTheme) return; // Prevent recursion during theme application
+                if (_isApplyingTheme) return;
                 
                 System.Diagnostics.Debug.WriteLine($"Settings property changed: {e.PropertyName}");
                 
                 SaveSettings();
                 
-                // Apply theme changes immediately on main thread
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     ApplyTheme();
@@ -54,13 +71,17 @@ namespace NoteApp.Services
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Settings Loading   |
+        // |                     |
+        // |---------------------|
         public void LoadSettings()
         {
             try
             {
                 System.Diagnostics.Debug.WriteLine("Loading settings...");
                 
-                // Temporarily disable property changed events to prevent recursion
                 _settings.PropertyChanged -= OnSettingsPropertyChanged;
                 
                 _settings.IsDarkMode = Preferences.Get(nameof(_settings.IsDarkMode), false);
@@ -72,23 +93,25 @@ namespace NoteApp.Services
                 _settings.FontSize = Preferences.Get(nameof(_settings.FontSize), 12);
                 _settings.FontFamily = Preferences.Get(nameof(_settings.FontFamily), "System Default");
                 
-                // Re-enable property changed events
                 _settings.PropertyChanged += OnSettingsPropertyChanged;
                 
                 System.Diagnostics.Debug.WriteLine($"Loaded settings - Dark mode: {_settings.IsDarkMode}, Auto-save: {_settings.AutoSaveEnabled}");
                 
-                // Apply theme after loading
                 MainThread.BeginInvokeOnMainThread(() => ApplyTheme());
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error loading settings: {ex.Message}");
-                // Re-enable events even if loading fails
                 _settings.PropertyChanged += OnSettingsPropertyChanged;
                 ResetToDefaults();
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Settings Saving    |
+        // |                     |
+        // |---------------------|
         public void SaveSettings()
         {
             try
@@ -112,13 +135,17 @@ namespace NoteApp.Services
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Reset to Default  |
+        // |                     |
+        // |---------------------|
         public void ResetToDefaults()
         {
             try
             {
                 System.Diagnostics.Debug.WriteLine("Resetting settings to defaults...");
                 
-                // Temporarily disable property changed events
                 _settings.PropertyChanged -= OnSettingsPropertyChanged;
                 
                 _settings.IsDarkMode = false;
@@ -130,7 +157,6 @@ namespace NoteApp.Services
                 _settings.FontSize = 12;
                 _settings.FontFamily = "System Default";
                 
-                // Re-enable property changed events
                 _settings.PropertyChanged += OnSettingsPropertyChanged;
                 
                 SaveSettings();
@@ -139,16 +165,20 @@ namespace NoteApp.Services
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error resetting settings: {ex.Message}");
-                // Re-enable events even if reset fails
                 _settings.PropertyChanged += OnSettingsPropertyChanged;
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Theme Application |
+        // |                     |
+        // |---------------------|
         public void ApplyTheme()
         {
             try 
             {
-                if (_isApplyingTheme) return; // Prevent recursion
+                if (_isApplyingTheme) return;
                 _isApplyingTheme = true;
                 
                 System.Diagnostics.Debug.WriteLine($"Applying theme globally - Dark mode: {_settings.IsDarkMode}");
@@ -172,10 +202,8 @@ namespace NoteApp.Services
                     ApplyLightTheme(resources);
                 }
 
-                // Apply performance mode settings
                 ApplyPerformanceMode(resources);
                 
-                // Force comprehensive UI refresh across all pages
                 ForceGlobalUIRefresh();
                 
                 System.Diagnostics.Debug.WriteLine("Theme applied successfully to all pages");
@@ -190,15 +218,17 @@ namespace NoteApp.Services
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Dark Theme Logic  |
+        // |                     |
+        // |---------------------|
         private void ApplyDarkTheme(ResourceDictionary resources)
         {
             try
             {
                 System.Diagnostics.Debug.WriteLine("Setting dark theme colors for all pages...");
                 
-                // COMPREHENSIVE DARK THEME - ALL COLORS
-                
-                // Primary theme colors
                 SetResourceSafe(resources, "Primary", "#2D2D30");
                 SetResourceSafe(resources, "PrimaryDark", "#1E1E1E");
                 SetResourceSafe(resources, "PrimaryDarkText", "#FFFFFF");
@@ -206,7 +236,6 @@ namespace NoteApp.Services
                 SetResourceSafe(resources, "SecondaryDarkText", "#B0B0B0");
                 SetResourceSafe(resources, "Tertiary", "#37373D");
                 
-                // Background colors for ALL pages
                 SetResourceSafe(resources, "WindowsBeige", "#1E1E1E");
                 SetResourceSafe(resources, "ButtonFace", "#37373D");
                 SetResourceSafe(resources, "ButtonShadow", "#000000");
@@ -214,7 +243,6 @@ namespace NoteApp.Services
                 SetResourceSafe(resources, "ControlDark", "#505050");
                 SetResourceSafe(resources, "ControlLight", "#37373D");
                 
-                // Content colors for ALL pages
                 SetResourceSafe(resources, "ContentWhite", "#252526");
                 SetResourceSafe(resources, "PaperWhite", "#2D2D30");
                 SetResourceSafe(resources, "OffWhite", "#252526");
@@ -224,19 +252,16 @@ namespace NoteApp.Services
                 SetResourceSafe(resources, "CategoryBackground", "#37373D");
                 SetResourceSafe(resources, "MetadataBackground", "#2D2D30");
                 
-                // Text colors for ALL pages
                 SetResourceSafe(resources, "Black", "#FFFFFF");
                 SetResourceSafe(resources, "White", "#1E1E1E");
                 SetResourceSafe(resources, "BeigeText", "#B0B0B0");
                 
-                // Accent colors (keep these for contrast)
                 SetResourceSafe(resources, "ClassicBlue", "#4A90E2");
                 SetResourceSafe(resources, "ClassicRed", "#E74C3C");
                 SetResourceSafe(resources, "AccentBlue", "#4A90E2");
                 SetResourceSafe(resources, "AccentGreen", "#27AE60");
                 SetResourceSafe(resources, "AccentBrown", "#D68910");
                 
-                // Complete gray scale for dark mode
                 SetResourceSafe(resources, "Gray100", "#37373D");
                 SetResourceSafe(resources, "Gray200", "#3E3E42");
                 SetResourceSafe(resources, "Gray300", "#505050");
@@ -248,7 +273,6 @@ namespace NoteApp.Services
                 SetResourceSafe(resources, "Gray900", "#F0F0F0");
                 SetResourceSafe(resources, "Gray950", "#FFFFFF");
                 
-                // Update brushes too
                 UpdateBrushResources(resources);
                 
                 System.Diagnostics.Debug.WriteLine("Dark theme colors applied to all pages");
@@ -259,15 +283,17 @@ namespace NoteApp.Services
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Light Theme Logic  |
+        // |                     |
+        // |---------------------|
         private void ApplyLightTheme(ResourceDictionary resources)
         {
             try
             {
                 System.Diagnostics.Debug.WriteLine("Setting light theme colors for all pages...");
                 
-                // COMPREHENSIVE LIGHT THEME - ALL COLORS
-                
-                // Restore original light theme colors
                 SetResourceSafe(resources, "Primary", "#E6DDD4");
                 SetResourceSafe(resources, "PrimaryDark", "#D2C7B8");
                 SetResourceSafe(resources, "PrimaryDarkText", "#2F2F2F");
@@ -275,7 +301,6 @@ namespace NoteApp.Services
                 SetResourceSafe(resources, "SecondaryDarkText", "#8B7355");
                 SetResourceSafe(resources, "Tertiary", "#EFE7DC");
                 
-                // Background colors for ALL pages
                 SetResourceSafe(resources, "WindowsBeige", "#F5F3ED");
                 SetResourceSafe(resources, "ButtonFace", "#EFEAE0");
                 SetResourceSafe(resources, "ButtonShadow", "#C4B8A8");
@@ -283,7 +308,6 @@ namespace NoteApp.Services
                 SetResourceSafe(resources, "ControlDark", "#B8AC98");
                 SetResourceSafe(resources, "ControlLight", "#FAF8F2");
                 
-                // Content colors for ALL pages
                 SetResourceSafe(resources, "ContentWhite", "#FEFCFA");
                 SetResourceSafe(resources, "PaperWhite", "#FFFEF9");
                 SetResourceSafe(resources, "OffWhite", "#FEFEFE");
@@ -293,19 +317,16 @@ namespace NoteApp.Services
                 SetResourceSafe(resources, "CategoryBackground", "#F2EDE5");
                 SetResourceSafe(resources, "MetadataBackground", "#EAE2D6");
                 
-                // Text colors for ALL pages
                 SetResourceSafe(resources, "Black", "#000000");
                 SetResourceSafe(resources, "White", "#FFFFFF");
                 SetResourceSafe(resources, "BeigeText", "#6B5B47");
                 
-                // Accent colors (original)
                 SetResourceSafe(resources, "ClassicBlue", "#2B4C85");
                 SetResourceSafe(resources, "ClassicRed", "#A0504A");
                 SetResourceSafe(resources, "AccentBlue", "#5A7BA8");
                 SetResourceSafe(resources, "AccentGreen", "#6B8E5A");
                 SetResourceSafe(resources, "AccentBrown", "#8B6914");
                 
-                // Complete gray scale for light mode
                 SetResourceSafe(resources, "Gray100", "#F7F5F0");
                 SetResourceSafe(resources, "Gray200", "#EFEBE4");
                 SetResourceSafe(resources, "Gray300", "#E0D8CC");
@@ -317,7 +338,6 @@ namespace NoteApp.Services
                 SetResourceSafe(resources, "Gray900", "#4A3F32");
                 SetResourceSafe(resources, "Gray950", "#2E251C");
                 
-                // Update brushes too
                 UpdateBrushResources(resources);
                 
                 System.Diagnostics.Debug.WriteLine("Light theme colors applied to all pages");
@@ -328,11 +348,15 @@ namespace NoteApp.Services
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Brush Updates     |
+        // |                     |
+        // |---------------------|
         private void UpdateBrushResources(ResourceDictionary resources)
         {
             try
             {
-                // Update brush resources to match the color changes
                 var brushesToUpdate = new[]
                 {
                     "PrimaryBrush", "SecondaryBrush", "TertiaryBrush", "WhiteBrush", 
@@ -366,6 +390,11 @@ namespace NoteApp.Services
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Utility Methods   |
+        // |                     |
+        // |---------------------|
         private void SetResourceSafe(ResourceDictionary resources, string key, string colorValue)
         {
             try
@@ -431,6 +460,11 @@ namespace NoteApp.Services
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |    UI Refresh       |
+        // |                     |
+        // |---------------------|
         private void ForceGlobalUIRefresh()
         {
             try
@@ -439,32 +473,25 @@ namespace NoteApp.Services
                 {
                     try
                     {
-                        // Method 1: Refresh the entire app
                         if (Application.Current?.MainPage != null)
                         {
                             var mainPage = Application.Current.MainPage;
                             
-                            // Force layout refresh
                             mainPage.ForceLayout();
                             
-                            // Trigger visual state updates
                             VisualStateManager.GoToState(mainPage, "Normal");
                             
-                            // Refresh all child pages if this is a Shell
                             if (mainPage is Shell shell)
                             {
                                 RefreshShellContent(shell);
                             }
                         }
                         
-                        // Method 2: Trigger a resource dictionary change event
                         Application.Current?.Resources?.Clear();
                         
-                        // Method 3: Force redraw by changing a global property
                         if (Application.Current != null)
                         {
                             var temp = Application.Current.RequestedTheme;
-                            // Trigger a theme refresh by reapplying the theme
                             ApplyTheme();
                         }
                         
@@ -486,7 +513,6 @@ namespace NoteApp.Services
         {
             try
             {
-                // Refresh all shell content
                 foreach (var item in shell.Items)
                 {
                     if (item?.CurrentItem?.CurrentItem is ShellContent shellContent && shellContent.Content is ContentPage page)

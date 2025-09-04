@@ -11,7 +11,13 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
-            <!-- All required converters -->
+            <!-- 
+               
+                 |                     |
+                 | Value Converters    |
+                 |                     |
+                  
+                 -->
             <converters:StringIsNotNullOrEmptyConverter x:Key="StringIsNotNullOrEmptyConverter" />
             <converters:BoolToSortIconConverter x:Key="BoolToSortIconConverter" />
             <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
@@ -21,6 +27,11 @@
             <converters:BoolToTextConverter x:Key="BoolToTextConverter" />
             <converters:CountToBoolConverter x:Key="CountToBoolConverter" />
             
+            <!-- 
+                 |                     |
+                 | Platform Settings   |
+                 |                     |
+                  -->
             <OnPlatform x:Key="PagePadding" x:TypeArguments="Thickness">
                 <On Platform="iOS" Value="0,20,0,0" />
                 <On Platform="Android" Value="0" />

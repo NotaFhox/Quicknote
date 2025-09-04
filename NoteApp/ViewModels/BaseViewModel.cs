@@ -5,6 +5,11 @@ namespace NoteApp.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
+        // |---------------------|
+        // |                     |
+        // |   Private Fields    |
+        // |                     |
+        // |---------------------|
         private bool _isBusy;
         private string _title = string.Empty;
         private string _errorMessage = string.Empty;
@@ -13,11 +18,21 @@ namespace NoteApp.ViewModels
 
         protected readonly ILogger? Logger;
 
+        // |---------------------|
+        // |                     |
+        // |    Constructor      |
+        // |                     |
+        // |---------------------|
         protected BaseViewModel(ILogger? logger = null)
         {
             Logger = logger;
         }
 
+        // |---------------------|
+        // |                     |
+        // |   State Properties  |
+        // |                     |
+        // |---------------------|
         public bool IsBusy
         {
             get => _isBusy;
@@ -47,6 +62,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Error Handling      |
+        // |                     |
+        // |---------------------|
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -74,6 +94,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Property Changed    |
+        // |                     |
+        // |---------------------|
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
@@ -81,7 +106,11 @@ namespace NoteApp.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        // Simplified async execution without complex command wrapping
+        // |---------------------|
+        // |                     |
+        // |  Async Execution    |
+        // |                     |
+        // |---------------------|
         protected virtual async Task ExecuteAsync(Func<Task> operation, [System.Runtime.CompilerServices.CallerMemberName] string? operationName = null)
         {
             if (IsBusy)
@@ -134,6 +163,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Error Management    |
+        // |                     |
+        // |---------------------|
         protected virtual void HandleError(Exception exception)
         {
             ErrorMessage = exception switch
@@ -151,7 +185,11 @@ namespace NoteApp.ViewModels
             ErrorMessage = string.Empty;
         }
 
-        // Simplified command creation methods
+        // |---------------------|
+        // |                     |
+        // | Command Helpers     |
+        // |                     |
+        // |---------------------|
         protected Command CreateCommand(Action execute, Func<bool>? canExecute = null)
         {
             return new Command(execute, canExecute ?? (() => true));
@@ -194,6 +232,11 @@ namespace NoteApp.ViewModels
             }, canExecute ?? (_ => true));
         }
 
+        // |---------------------|
+        // |                     |
+        // |    Disposal         |
+        // |                     |
+        // |---------------------|
         public void Dispose()
         {
             Dispose(true);

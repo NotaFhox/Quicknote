@@ -7,6 +7,11 @@ namespace NoteApp.Services
 {
     public class DatabaseNoteService : INoteService
     {
+        // |------------------------------------------------------|
+        // |                                                      |
+        // |             Class Fields & Constructor               |
+        // |                                                      |
+        // |------------------------------------------------------|
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<DatabaseNoteService> _logger;
         private readonly SemaphoreSlim _semaphore = new(1, 1);
@@ -17,13 +22,22 @@ namespace NoteApp.Services
             _logger = logger;
         }
 
-        // Create a new context for each operation to avoid tracking conflicts
+        // |------------------------------------------------------|
+        // |                                                      |
+        // |             Database Context Factory                 |
+        // |                                                      |
+        // |------------------------------------------------------|
         private NoteDbContext CreateContext()
         {
             var scope = _serviceProvider.CreateScope();
             return scope.ServiceProvider.GetRequiredService<NoteDbContext>();
         }
 
+        // |------------------------------------------------------|
+        // |                                                      |
+        // |                 Read Operations                      |
+        // |                                                      |
+        // |------------------------------------------------------|
         public async Task<List<Note>> GetNotesAsync()
         {
             await _semaphore.WaitAsync();
@@ -78,6 +92,11 @@ namespace NoteApp.Services
             }
         }
 
+        // |------------------------------------------------------|
+        // |                                                      |
+        // |             Create & Update Operation                |
+        // |                                                      |
+        // |------------------------------------------------------|
         public async Task<int> SaveNoteAsync(Note note)
         {
             try
@@ -93,7 +112,6 @@ namespace NoteApp.Services
                     {
                         _logger.LogDebug("Creating new note: {NoteTitle}", note.Title);
                         
-                        // Create a new note entity to avoid tracking issues
                         var newNote = new Note
                         {
                             Title = note.Title,
@@ -107,7 +125,6 @@ namespace NoteApp.Services
                         context.Notes.Add(newNote);
                         await context.SaveChangesAsync();
                         
-                        // Update the original note with the new ID
                         note.Id = newNote.Id;
                         note.DateCreated = newNote.DateCreated;
                         note.DateModified = newNote.DateModified;
@@ -119,7 +136,6 @@ namespace NoteApp.Services
                     {
                         _logger.LogDebug("Updating note ID: {NoteId}", note.Id);
                         
-                        // Find the existing note and update its properties
                         var existingNote = await context.Notes.FindAsync(note.Id);
                         if (existingNote == null)
                         {
@@ -134,7 +150,6 @@ namespace NoteApp.Services
                         
                         await context.SaveChangesAsync();
                         
-                        // Update the original note's modified date
                         note.DateModified = existingNote.DateModified;
                         
                         _logger.LogInformation("Updated note ID: {NoteId}", note.Id);
@@ -153,6 +168,11 @@ namespace NoteApp.Services
             }
         }
 
+        // |------------------------------------------------------|
+        // |                                                      |
+        // |                 Delete Operations                    |
+        // |                                                      |
+        // |------------------------------------------------------|
         public async Task<int> DeleteNoteAsync(Note note)
         {
             try
@@ -166,7 +186,6 @@ namespace NoteApp.Services
                     
                     _logger.LogDebug("Deleting note ID: {NoteId}", note.Id);
                     
-                    // Find the note by ID to ensure we're deleting the right one
                     var noteToDelete = await context.Notes.FindAsync(note.Id);
                     if (noteToDelete == null)
                     {
@@ -192,6 +211,53 @@ namespace NoteApp.Services
             }
         }
 
+        public async Task<int> DeleteMultipleNotesAsync(IEnumerable<Note> notes)
+        {
+            try
+            {
+                ArgumentNullException.ThrowIfNull(notes);
+                
+                await _semaphore.WaitAsync();
+                try
+                {
+                    using var context = CreateContext();
+                    
+                    var noteList = notes.ToList();
+                    _logger.LogDebug("Deleting {NoteCount} notes", noteList.Count);
+                    
+                    var noteIds = noteList.Select(n => n.Id).ToList();
+                    var notesToDelete = await context.Notes
+                        .Where(n => noteIds.Contains(n.Id))
+                        .ToListAsync();
+                    
+                    if (notesToDelete.Any())
+                    {
+                        context.Notes.RemoveRange(notesToDelete);
+                        var result = await context.SaveChangesAsync();
+                        
+                        _logger.LogInformation("Deleted {NoteCount} notes", notesToDelete.Count);
+                        return result;
+                    }
+                    
+                    return 0;
+                }
+                finally
+                {
+                    _semaphore.Release();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting multiple notes");
+                throw;
+            }
+        }
+
+        // |------------------------------------------------------|
+        // |                                                      |
+        // |             Query & Filter Operations                |
+        // |                                                      |
+        // |------------------------------------------------------|
         public async Task<List<Note>> SearchNotesAsync(string searchTerm)
         {
             try
@@ -210,9 +276,9 @@ namespace NoteApp.Services
                 var notes = await context.Notes
                     .AsNoTracking()
                     .Where(n => EF.Functions.Like(n.Title.ToLower(), $"%{normalizedSearchTerm}%") || 
-                               EF.Functions.Like(n.Content.ToLower(), $"%{normalizedSearchTerm}%") ||
-                               EF.Functions.Like(n.Tags.ToLower(), $"%{normalizedSearchTerm}%") ||
-                               EF.Functions.Like(n.Category.ToLower(), $"%{normalizedSearchTerm}%"))
+                                EF.Functions.Like(n.Content.ToLower(), $"%{normalizedSearchTerm}%") ||
+                                EF.Functions.Like(n.Tags.ToLower(), $"%{normalizedSearchTerm}%") ||
+                                EF.Functions.Like(n.Category.ToLower(), $"%{normalizedSearchTerm}%"))
                     .OrderByDescending(n => n.DateModified)
                     .ToListAsync();
                 
@@ -284,48 +350,11 @@ namespace NoteApp.Services
             }
         }
 
-        public async Task<int> DeleteMultipleNotesAsync(IEnumerable<Note> notes)
-        {
-            try
-            {
-                ArgumentNullException.ThrowIfNull(notes);
-                
-                await _semaphore.WaitAsync();
-                try
-                {
-                    using var context = CreateContext();
-                    
-                    var noteList = notes.ToList();
-                    _logger.LogDebug("Deleting {NoteCount} notes", noteList.Count);
-                    
-                    var noteIds = noteList.Select(n => n.Id).ToList();
-                    var notesToDelete = await context.Notes
-                        .Where(n => noteIds.Contains(n.Id))
-                        .ToListAsync();
-                    
-                    if (notesToDelete.Any())
-                    {
-                        context.Notes.RemoveRange(notesToDelete);
-                        var result = await context.SaveChangesAsync();
-                        
-                        _logger.LogInformation("Deleted {NoteCount} notes", notesToDelete.Count);
-                        return result;
-                    }
-                    
-                    return 0;
-                }
-                finally
-                {
-                    _semaphore.Release();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting multiple notes");
-                throw;
-            }
-        }
-
+        // |------------------------------------------------------|
+        // |                                                      |
+        // |               Database Health Check                  |
+        // |                                                      |
+        // |------------------------------------------------------|
         public async Task<bool> IsHealthyAsync()
         {
             try

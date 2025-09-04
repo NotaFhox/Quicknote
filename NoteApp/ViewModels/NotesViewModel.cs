@@ -12,7 +12,18 @@ namespace NoteApp.ViewModels
 {
     public class NotesViewModel : BaseViewModel
     {
+        // |---------------------|
+        // |                     |
+        // |   Service Fields    |
+        // |                     |
+        // |---------------------|
         private readonly INoteService _noteService;
+
+        // |---------------------|
+        // |                     |
+        // |   Private Fields    |
+        // |                     |
+        // |---------------------|
         private string _searchText = string.Empty;
         private string _selectedCategory = "All";
         private List<string> _categories = new();
@@ -26,9 +37,19 @@ namespace NoteApp.ViewModels
         private bool _hasMoreItems = false;
         private bool _isLoadingMore = false;
 
+        // |---------------------|
+        // |                     |
+        // |   Collections       |
+        // |                     |
+        // |---------------------|
         public ObservableCollection<Note> Notes { get; set; } = new();
         public ObservableCollection<Note> FilteredNotes { get; private set; } = new();
 
+        // |---------------------|
+        // |                     |
+        // | Search & Filter     |
+        // |                     |
+        // |---------------------|
         public string SearchText
         {
             get => _searchText;
@@ -67,16 +88,11 @@ namespace NoteApp.ViewModels
             }
         }
 
-        public bool IsRefreshing
-        {
-            get => _isRefreshing;
-            set
-            {
-                _isRefreshing = value;
-                OnPropertyChanged();
-            }
-        }
-
+        // |---------------------|
+        // |                     |
+        // |  Sorting Properties |
+        // |                     |
+        // |---------------------|
         public string SortBy
         {
             get => _sortBy;
@@ -105,6 +121,21 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   State Properties  |
+        // |                     |
+        // |---------------------|
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set
+            {
+                _isRefreshing = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool HasMoreItems
         {
             get => _hasMoreItems;
@@ -125,6 +156,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |      Commands       |
+        // |                     |
+        // |---------------------|
         public ICommand LoadNotesCommand { get; }
         public ICommand AddNoteCommand { get; }
         public ICommand SelectNoteCommand { get; }
@@ -140,12 +176,16 @@ namespace NoteApp.ViewModels
         public ICommand ShowHelpCommand { get; }
         public ICommand OpenSettingsCommand { get; }
 
+        // |---------------------|
+        // |                     |
+        // |    Constructor      |
+        // |                     |
+        // |---------------------|
         public NotesViewModel(INoteService noteService, ILogger<NotesViewModel>? logger = null) : base(logger)
         {
             _noteService = noteService;
             Title = "My Notes";
 
-            // Initialize collections
             Notes = new ObservableCollection<Note>();
             FilteredNotes = new ObservableCollection<Note>();
             Categories = new List<string> { "All" };
@@ -173,6 +213,11 @@ namespace NoteApp.ViewModels
             OpenSettingsCommand = CreateAsyncCommand(OpenSettings);
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Loading Methods   |
+        // |                     |
+        // |---------------------|
         private async Task LoadNotes()
         {
             if (IsBusy) return;
@@ -181,7 +226,6 @@ namespace NoteApp.ViewModels
             {
                 _currentPage = 1;
                 
-                // Clear collections on UI thread
                 await MainThread.InvokeOnMainThreadAsync(() =>
                 {
                     Notes.Clear();
@@ -227,6 +271,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Filtering Methods   |
+        // |                     |
+        // |---------------------|
         private async Task FilterNotesAsync()
         {
             await Task.Run(async () =>
@@ -275,6 +324,26 @@ namespace NoteApp.ViewModels
             });
         }
 
+        private async void DelayedSearch()
+        {
+            _searchCancellationTokenSource?.Cancel();
+            _searchCancellationTokenSource = new CancellationTokenSource();
+            
+            try
+            {
+                await Task.Delay(300, _searchCancellationTokenSource.Token);
+                await FilterNotesAsync();
+            }
+            catch (TaskCanceledException)
+            {
+            }
+        }
+
+        // |---------------------|
+        // |                     |
+        // |   Sorting Methods   |
+        // |                     |
+        // |---------------------|
         private void SortNotes()
         {
             MainThread.BeginInvokeOnMainThread(() =>
@@ -303,22 +372,11 @@ namespace NoteApp.ViewModels
             });
         }
 
-        private async void DelayedSearch()
-        {
-            _searchCancellationTokenSource?.Cancel();
-            _searchCancellationTokenSource = new CancellationTokenSource();
-            
-            try
-            {
-                await Task.Delay(300, _searchCancellationTokenSource.Token);
-                await FilterNotesAsync();
-            }
-            catch (TaskCanceledException)
-            {
-                // Search was cancelled, this is expected
-            }
-        }
-
+        // |---------------------|
+        // |                     |
+        // |   Search Methods    |
+        // |                     |
+        // |---------------------|
         private async Task SearchNotes()
         {
             await FilterNotesAsync();
@@ -337,6 +395,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Note Operations    |
+        // |                     |
+        // |---------------------|
         private async Task AddNote()
         {
             try
@@ -345,8 +408,8 @@ namespace NoteApp.ViewModels
                 
                 var newNote = new Note
                 {
-                    Title = "",  // Start with empty title
-                    Content = "", // Start with empty content
+                    Title = "",
+                    Content = "",
                     Category = SelectedCategory == "All" ? "General" : SelectedCategory
                 };
                 
@@ -380,7 +443,7 @@ namespace NoteApp.ViewModels
                 };
                 
                 await _noteService.SaveNoteAsync(newNote);
-                await LoadNotes(); // Refresh the list
+                await LoadNotes();
             }
             catch (Exception ex)
             {
@@ -404,6 +467,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Delete Operations   |
+        // |                     |
+        // |---------------------|
         private async Task DeleteNote(Note? note)
         {
             if (note == null) return;
@@ -417,7 +485,6 @@ namespace NoteApp.ViewModels
                 {
                     await _noteService.DeleteNoteAsync(note);
                     
-                    // Remove from local collections immediately for UI responsiveness
                     await MainThread.InvokeOnMainThreadAsync(() =>
                     {
                         _allNotes.Remove(note);
@@ -425,7 +492,6 @@ namespace NoteApp.ViewModels
                         Notes.Remove(note);
                     });
                     
-                    // Optionally refresh to ensure consistency
                     await LoadNotes();
                 }
             }
@@ -434,7 +500,6 @@ namespace NoteApp.ViewModels
                 Logger?.LogError(ex, "Error deleting note {NoteId}", note.Id);
                 await Shell.Current.DisplayAlert("Error", "Could not delete note. Please try again.", "OK");
                 
-                // Refresh to restore UI state if delete failed
                 await LoadNotes();
             }
         }
@@ -453,7 +518,6 @@ namespace NoteApp.ViewModels
                 {
                     await _noteService.DeleteMultipleNotesAsync(notes);
                     
-                    // Remove from local collections
                     await MainThread.InvokeOnMainThreadAsync(() =>
                     {
                         foreach (var note in notes)
@@ -464,7 +528,6 @@ namespace NoteApp.ViewModels
                         }
                     });
                     
-                    // Refresh to ensure consistency
                     await LoadNotes();
                 }
             }
@@ -473,21 +536,35 @@ namespace NoteApp.ViewModels
                 Logger?.LogError(ex, "Error deleting multiple notes");
                 await Shell.Current.DisplayAlert("Error", "Could not delete notes. Please try again.", "OK");
                 
-                // Refresh to restore UI state
                 await LoadNotes();
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Category Operations |
+        // |                     |
+        // |---------------------|
         private async Task FilterByCategory()
         {
             await FilterNotesAsync();
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Lifecycle Methods  |
+        // |                     |
+        // |---------------------|
         public async Task OnAppearing()
         {
             await LoadNotes();
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Utility Methods   |
+        // |                     |
+        // |---------------------|
         private async Task ShowHelp()
         {
             var helpText = @"📝 Quicknote Help
@@ -537,7 +614,6 @@ Version: Quicknote 4.1.0 - Fhox Edition 2025";
                 Logger?.LogError(ex, "Error navigating to settings");
                 System.Diagnostics.Debug.WriteLine($"Settings navigation error: {ex.Message}");
                 
-                // Try alternative navigation method
                 try
                 {
                     await Shell.Current.GoToAsync("//SettingsPage");
@@ -550,6 +626,11 @@ Version: Quicknote 4.1.0 - Fhox Edition 2025";
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Cleanup Methods   |
+        // |                     |
+        // |---------------------|
         protected override void Dispose(bool disposing)
         {
             if (disposing)

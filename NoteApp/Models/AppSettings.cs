@@ -5,15 +5,25 @@ namespace NoteApp.Models
 {
     public class AppSettings : INotifyPropertyChanged
     {
+        // |---------------------|
+        // |                     |
+        // |   Private Fields    |
+        // |                     |
+        // |---------------------|
         private bool _isDarkMode = false;
         private bool _isPerformanceMode = false;
         private bool _autoSaveEnabled = true;
-        private int _autoSaveInterval = 10; // seconds
+        private int _autoSaveInterval = 10;
         private string _defaultCategory = "General";
         private bool _showLineNumbers = false;
         private int _fontSize = 12;
         private string _fontFamily = "System Default";
 
+        // |---------------------|
+        // |                     |
+        // |  Display Properties |
+        // |                     |
+        // |---------------------|
         public bool IsDarkMode
         {
             get => _isDarkMode;
@@ -41,6 +51,11 @@ namespace NoteApp.Models
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Auto-Save Settings  |
+        // |                     |
+        // |---------------------|
         public bool AutoSaveEnabled
         {
             get => _autoSaveEnabled;
@@ -67,6 +82,11 @@ namespace NoteApp.Models
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Content Settings   |
+        // |                     |
+        // |---------------------|
         public string DefaultCategory
         {
             get => _defaultCategory;
@@ -93,6 +113,11 @@ namespace NoteApp.Models
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Font Settings     |
+        // |                     |
+        // |---------------------|
         public int FontSize
         {
             get => _fontSize;
@@ -119,6 +144,11 @@ namespace NoteApp.Models
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Property Changed    |
+        // |                     |
+        // |---------------------|
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -132,7 +162,5 @@ namespace NoteApp.Models
                 System.Diagnostics.Debug.WriteLine($"Error in OnPropertyChanged for {propertyName}: {ex.Message}");
             }
         }
-
-        
     }
 }

@@ -1,4 +1,3 @@
-
 using NoteApp.Models;
 using NoteApp.Services;
 using Microsoft.Extensions.Logging;
@@ -10,8 +9,19 @@ namespace NoteApp.ViewModels
     [QueryProperty(nameof(Note), "Note")]
     public class NoteDetailViewModel : BaseViewModel
     {
+        // |---------------------|
+        // |                     |
+        // |   Service Fields    |
+        // |                     |
+        // |---------------------|
         private readonly INoteService _noteService;
         private readonly ISettingsService _settingsService;
+        
+        // |---------------------|
+        // |                     |
+        // |   Private Fields    |
+        // |                     |
+        // |---------------------|
         private Note _note = new();
         private Note? _originalNote;
         private Timer? _autoSaveTimer;
@@ -20,6 +30,11 @@ namespace NoteApp.ViewModels
         private string _lastSavedContent = string.Empty;
         private bool _isNavigating = false;
 
+        // |---------------------|
+        // |                     |
+        // |    Properties       |
+        // |                     |
+        // |---------------------|
         public Note Note
         {
             get => _note;
@@ -48,7 +63,7 @@ namespace NoteApp.ViewModels
 
         public int NoteId { get; set; }
         public bool IsNewNote => NoteId == 0;
-        public bool CanSave => !IsBusy; // Always allow saving, we'll handle empty content in the save method
+        public bool CanSave => !IsBusy;
         public bool CanDelete => !IsBusy && !IsNewNote;
         public bool CanGoBack => !IsBusy;
         
@@ -62,23 +77,37 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |      Commands       |
+        // |                     |
+        // |---------------------|
         public ICommand SaveCommand { get; }
         public ICommand BackCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand ShowHelpCommand { get; }
 
+        // |---------------------|
+        // |                     |
+        // |    Constructor      |
+        // |                     |
+        // |---------------------|
         public NoteDetailViewModel(INoteService noteService, ISettingsService settingsService, ILogger<NoteDetailViewModel>? logger = null) : base(logger)
         {
             _noteService = noteService;
             _settingsService = settingsService;
             
-            // Create commands with simpler logic
             SaveCommand = new Command(async () => await SaveNote(), () => CanSave);
             BackCommand = new Command(async () => await HandleBackNavigation(), () => CanGoBack);
             DeleteCommand = new Command(async () => await DeleteNote(), () => CanDelete);
             ShowHelpCommand = new Command(async () => await ShowHelp());
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Loading Methods    |
+        // |                     |
+        // |---------------------|
         public async Task LoadNote()
         {
             try
@@ -89,7 +118,7 @@ namespace NoteApp.ViewModels
                     if (note != null)
                     {
                         _originalNote = new Note(note);
-                        Note = new Note(note); // Create a copy to avoid tracking issues
+                        Note = new Note(note);
                         Title = Note.Title;
                     }
                     else
@@ -120,6 +149,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Event Handlers     |
+        // |                     |
+        // |---------------------|
         private void OnNotePropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Note.Title) || e.PropertyName == nameof(Note.Content))
@@ -133,6 +167,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Utility Methods   |
+        // |                     |
+        // |---------------------|
         private void RefreshCommandStates()
         {
             try
@@ -152,49 +191,47 @@ namespace NoteApp.ViewModels
             HasUnsavedChanges = Note.Title != _lastSavedTitle || Note.Content != _lastSavedContent;
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Auto-Save Logic   |
+        // |                     |
+        // |---------------------|
         private void StartAutoSave()
         {
             _autoSaveTimer?.Dispose();
             
-            // Use settings service if available, otherwise use defaults
             bool autoSaveEnabled = _settingsService?.Settings?.AutoSaveEnabled ?? true;
             int autoSaveInterval = _settingsService?.Settings?.AutoSaveInterval ?? 10;
             
             if (autoSaveEnabled)
             {
                 var interval = TimeSpan.FromSeconds(autoSaveInterval);
-                // Auto-save after initial 5 second delay, then at configured interval
                 _autoSaveTimer = new Timer(async _ => await AutoSave(), null, TimeSpan.FromSeconds(5), interval);
             }
         }
 
         private void RestartAutoSaveTimer()
         {
-            // Use settings service if available, otherwise use defaults
             bool autoSaveEnabled = _settingsService?.Settings?.AutoSaveEnabled ?? true;
             int autoSaveInterval = _settingsService?.Settings?.AutoSaveInterval ?? 10;
             
             if (autoSaveEnabled)
             {
                 var interval = TimeSpan.FromSeconds(autoSaveInterval);
-                // Restart timer - save after 3 seconds of no typing, then at configured interval
                 _autoSaveTimer?.Change(TimeSpan.FromSeconds(3), interval);
             }
         }
 
         private async Task AutoSave()
         {
-            // Use settings service if available, otherwise use defaults
             bool autoSaveEnabled = _settingsService?.Settings?.AutoSaveEnabled ?? true;
             
             if (HasUnsavedChanges && !IsBusy && !_isNavigating && autoSaveEnabled)
             {
                 try
                 {
-                    // Only auto-save if we have some content
                     if (!string.IsNullOrWhiteSpace(Note.Title) || !string.IsNullOrWhiteSpace(Note.Content))
                     {
-                        // If no title, generate one for auto-save
                         if (string.IsNullOrWhiteSpace(Note.Title))
                         {
                             Note.Title = GenerateDefaultTitle();
@@ -202,7 +239,6 @@ namespace NoteApp.ViewModels
 
                         await _noteService.SaveNoteAsync(Note);
                         
-                        // Update the NoteId if this was a new note
                         if (IsNewNote && Note.Id > 0)
                         {
                             NoteId = Note.Id;
@@ -228,6 +264,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Command Methods    |
+        // |                     |
+        // |---------------------|
         private async Task SaveNote()
         {
             if (IsBusy) return;
@@ -236,15 +277,13 @@ namespace NoteApp.ViewModels
             {
                 IsBusy = true;
                 
-                // If both title and content are empty, create a default note
                 if (string.IsNullOrWhiteSpace(Note.Title) && string.IsNullOrWhiteSpace(Note.Content))
                 {
                     Note.Title = GenerateDefaultTitle();
-                    Note.Content = ""; // Empty content is fine
+                    Note.Content = "";
                 }
                 else if (string.IsNullOrWhiteSpace(Note.Title))
                 {
-                    // If only title is empty, generate from content or use default
                     Note.Title = GenerateDefaultTitle();
                 }
 
@@ -358,6 +397,11 @@ namespace NoteApp.ViewModels
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Helper Methods     |
+        // |                     |
+        // |---------------------|
         private string GenerateDefaultTitle()
         {
             if (!string.IsNullOrWhiteSpace(Note.Content))
@@ -406,6 +450,11 @@ Version: Quicknote 4.1.0 - Fhox Edition 2025";
             await Shell.Current.DisplayAlert("Help - Quicknote", helpText, "Close");
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Cleanup Methods    |
+        // |                     |
+        // |---------------------|
         protected override void Dispose(bool disposing)
         {
             if (disposing)

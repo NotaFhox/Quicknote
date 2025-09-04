@@ -6,6 +6,11 @@ namespace NoteApp.Models
 {
     public class Note : INotifyPropertyChanged
     {
+        // |---------------------|
+        // |                     |
+        // |   Private Fields    |
+        // |                     |
+        // |---------------------|
         private string _title = string.Empty;
         private string _content = string.Empty;
         private DateTime _dateCreated;
@@ -17,6 +22,11 @@ namespace NoteApp.Models
         private string? _formattedDateModified;
         private List<string>? _tagList;
 
+        // |---------------------|
+        // |                     |
+        // |  Core Properties    |
+        // |                     |
+        // |---------------------|
         public int Id { get; set; }
         
         [Required(ErrorMessage = "Title is required")]
@@ -54,6 +64,11 @@ namespace NoteApp.Models
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |Organization Fields  |
+        // |                     |
+        // |---------------------|
         [StringLength(50, ErrorMessage = "Category cannot exceed 50 characters")]
         public string Category
         {
@@ -86,6 +101,11 @@ namespace NoteApp.Models
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Timestamp Fields   |
+        // |                     |
+        // |---------------------|
         public DateTime DateCreated
         {
             get => _dateCreated;
@@ -117,6 +137,11 @@ namespace NoteApp.Models
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // | Computed Properties |
+        // |                     |
+        // |---------------------|
         public bool HasContent => !string.IsNullOrWhiteSpace(Title) || !string.IsNullOrWhiteSpace(Content);
         
         public string ContentPreview 
@@ -181,6 +206,11 @@ namespace NoteApp.Models
             }
         }
 
+        // |---------------------|
+        // |                     |
+        // |    Constructors     |
+        // |                     |
+        // |---------------------|
         public Note()
         {
             DateCreated = DateTime.Now;
@@ -200,6 +230,11 @@ namespace NoteApp.Models
             DateModified = other.DateModified;
         }
 
+        // |---------------------|
+        // |                     |
+        // | Property Changed    |
+        // |                     |
+        // |---------------------|
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -207,6 +242,11 @@ namespace NoteApp.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Validation        |
+        // |                     |
+        // |---------------------|
         public List<ValidationResult> Validate()
         {
             var results = new List<ValidationResult>();
@@ -219,6 +259,11 @@ namespace NoteApp.Models
 
         public bool IsValid => !Validate().Any();
 
+        // |---------------------|
+        // |                     |
+        // |  Object Overrides   |
+        // |                     |
+        // |---------------------|
         public override bool Equals(object? obj)
         {
             return obj is Note other && Id == other.Id;
@@ -234,6 +279,11 @@ namespace NoteApp.Models
             return $"Note: {Title} ({Id})";
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Utility Methods    |
+        // |                     |
+        // |---------------------|
         public bool MatchesSearchTerm(string searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
@@ -246,6 +296,11 @@ namespace NoteApp.Models
                    Tags.ToLowerInvariant().Contains(term);
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Tag Management    |
+        // |                     |
+        // |---------------------|
         public void AddTag(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))

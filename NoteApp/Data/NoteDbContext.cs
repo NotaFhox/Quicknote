@@ -5,25 +5,47 @@ namespace NoteApp.Data
 {
     public class NoteDbContext : DbContext
     {
+        // |---------------------|
+        // |                     |
+        // |      DbSets         |
+        // |                     |
+        // |---------------------|
         public DbSet<Note> Notes { get; set; }
 
+        // |---------------------|
+        // |                     |
+        // |    Constructor      |
+        // |                     |
+        // |---------------------|
         public NoteDbContext(DbContextOptions<NoteDbContext> options)
             : base(options)
         {
         }
 
+        // |---------------------|
+        // |                     |
+        // |  Model Configuration|
+        // |                     |
+        // |---------------------|
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure Note entity with enhanced .NET 9.0 features
             modelBuilder.Entity<Note>(entity =>
             {
-                // Primary key configuration
+                // |---------------------|
+                // |                     |
+                // |   Primary Key       |
+                // |                     |
+                // |---------------------|
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-                // Required properties with constraints
+                // |---------------------|
+                // |                     |
+                // | Property Constraints|
+                // |                     |
+                // |---------------------|
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -42,7 +64,11 @@ namespace NoteApp.Data
                     .HasMaxLength(500)
                     .HasComment("Comma-separated tags for the note");
 
-                // Date properties with proper configuration
+                // |---------------------|
+                // |                     |
+                // | Date Configuration  |
+                // |                     |
+                // |---------------------|
                 entity.Property(e => e.DateCreated)
                     .IsRequired()
                     .HasDefaultValueSql("datetime('now')")
@@ -53,28 +79,39 @@ namespace NoteApp.Data
                     .HasDefaultValueSql("datetime('now')")
                     .HasComment("When the note was last modified");
                 
-                // Performance indexes for .NET 9.0 optimization
+                // |---------------------|
+                // |                     |
+                // |Performance Indexes  |
+                // |                     |
+                // |---------------------|
                 entity.HasIndex(e => e.Title)
                     .HasDatabaseName("IX_Notes_Title");
                 
                 entity.HasIndex(e => e.DateModified)
                     .HasDatabaseName("IX_Notes_DateModified")
-                    .IsDescending(); // Optimize for recent notes first
+                    .IsDescending();
                 
                 entity.HasIndex(e => e.Category)
                     .HasDatabaseName("IX_Notes_Category");
                 
-                // Composite index for search optimization
+                // |---------------------|
+                // |                     |
+                // |  Composite Indexes  |
+                // |                     |
+                // |---------------------|
                 entity.HasIndex(e => new { e.Category, e.DateModified })
                     .HasDatabaseName("IX_Notes_Category_DateModified")
                     .IsDescending(false, true);
 
-                // Full-text search index for content (SQLite FTS5 when available)
                 entity.HasIndex(e => new { e.Title, e.Content })
                     .HasDatabaseName("IX_Notes_Search");
             });
 
-            // Seed data for initial setup (optional)
+            // |---------------------|
+            // |                     |
+            // |     Seed Data       |
+            // |                     |
+            // |---------------------|
             modelBuilder.Entity<Note>().HasData(
                 new Note
                 {
@@ -89,20 +126,28 @@ namespace NoteApp.Data
             );
         }
 
+        // |---------------------|
+        // |                     |
+        // | Database Configuration|
+        // |                     |
+        // |---------------------|
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
             
-            // Enhanced SQLite configuration for .NET 9.0
             if (!optionsBuilder.IsConfigured)
             {
                 var dbPath = Path.Combine(FileSystem.AppDataDirectory, "notes.db");
                 optionsBuilder.UseSqlite($"Data Source={dbPath}");
             }
 
-            // Performance optimizations for .NET 9.0
-            optionsBuilder.EnableSensitiveDataLogging(false); // Security best practice
-            optionsBuilder.EnableDetailedErrors(false); // Production security
+            // |---------------------|
+            // |                     |
+            // |Performance Settings |
+            // |                     |
+            // |---------------------|
+            optionsBuilder.EnableSensitiveDataLogging(false);
+            optionsBuilder.EnableDetailedErrors(false);
             
 #if DEBUG
             optionsBuilder.EnableSensitiveDataLogging(true);
@@ -111,7 +156,11 @@ namespace NoteApp.Data
 #endif
         }
 
-        // Override SaveChanges to automatically update DateModified
+        // |---------------------|
+        // |                     |
+        // | Save Changes Override|
+        // |                     |
+        // |---------------------|
         public override int SaveChanges()
         {
             UpdateTimestamps();
@@ -124,6 +173,11 @@ namespace NoteApp.Data
             return await base.SaveChangesAsync(cancellationToken);
         }
 
+        // |---------------------|
+        // |                     |
+        // | Timestamp Management|
+        // |                     |
+        // |---------------------|
         private void UpdateTimestamps()
         {
             var entries = ChangeTracker.Entries<Note>()

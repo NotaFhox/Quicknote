@@ -280,7 +280,7 @@
                    FontFamily="MS Sans Serif"
                    HorizontalTextAlignment="Center" />
             
-            <Label Text="Version 4.1.0 - Fhox Edition 2025"
+            <Label Text="Version 4.1.1 - Fhox Edition 2025"
                    FontFamily="MS Sans Serif"
                    FontSize="12"
                    HorizontalTextAlignment="Center"

@@ -4,6 +4,11 @@ namespace NoteApp.Services
 {
     public class MockNoteService : INoteService
     {
+        // |---------------------|
+        // |                     |
+        // |   Static Test Data  |
+        // |                     |
+        // |---------------------|
         private static List<Note> _notes = new List<Note>
         {
             new Note { Id = 1, Title = "Welcome Note", Content = "This is your first note! Tap to edit." },
@@ -13,6 +18,11 @@ namespace NoteApp.Services
 
         private int _nextId = 4;
 
+        // |---------------------|
+        // |                     |
+        // |   Retrieval Methods |
+        // |                     |
+        // |---------------------|
         public async Task<List<Note>> GetNotesAsync()
         {
             await Task.Delay(100);
@@ -25,6 +35,11 @@ namespace NoteApp.Services
             return _notes.FirstOrDefault(n => n.Id == id);
         }
 
+        // |---------------------|
+        // |                     |
+        // |   Save Operations   |
+        // |                     |
+        // |---------------------|
         public async Task<int> SaveNoteAsync(Note note)
         {
             await Task.Delay(100);
@@ -51,6 +66,11 @@ namespace NoteApp.Services
             return note.Id;
         }
 
+        // |---------------------|
+        // |                     |
+        // | Delete Operations   |
+        // |                     |
+        // |---------------------|
         public async Task<int> DeleteNoteAsync(Note note)
         {
             await Task.Delay(50);
@@ -63,6 +83,33 @@ namespace NoteApp.Services
             return 0;
         }
 
+        public async Task<int> DeleteMultipleNotesAsync(IEnumerable<Note> notes)
+        {
+            ArgumentNullException.ThrowIfNull(notes);
+
+            await Task.Delay(100);
+
+            var noteList = notes.ToList();
+            var deletedCount = 0;
+
+            foreach (var note in noteList)
+            {
+                var existingNote = _notes.FirstOrDefault(n => n.Id == note.Id);
+                if (existingNote != null)
+                {
+                    _notes.Remove(existingNote);
+                    deletedCount++;
+                }
+            }
+
+            return deletedCount;
+        }
+
+        // |---------------------|
+        // |                     |
+        // |   Search Methods    |
+        // |                     |
+        // |---------------------|
         public async Task<List<Note>> SearchNotesAsync(string searchTerm)
         {
             await Task.Delay(50);
@@ -81,6 +128,11 @@ namespace NoteApp.Services
                 .ToList();
         }
 
+        // |---------------------|
+        // |                     |
+        // | Category Operations |
+        // |                     |
+        // |---------------------|
         public async Task<List<Note>> GetNotesByCategoryAsync(string category)
         {
             await Task.Delay(50);
@@ -108,37 +160,17 @@ namespace NoteApp.Services
             return categories;
         }
 
-
-        public async Task<int> DeleteMultipleNotesAsync(IEnumerable<Note> notes)
-        {
-            ArgumentNullException.ThrowIfNull(notes);
-
-            await Task.Delay(100);
-
-            var noteList = notes.ToList();
-            var deletedCount = 0;
-
-            foreach (var note in noteList)
-            {
-                var existingNote = _notes.FirstOrDefault(n => n.Id == note.Id);
-                if (existingNote != null)
-                {
-                    _notes.Remove(existingNote);
-                    deletedCount++;
-                }
-            }
-
-            return deletedCount;
-        }
-
-
+        // |---------------------|
+        // |                     |
+        // |   Health Checks     |
+        // |                     |
+        // |---------------------|
         public async Task<bool> IsHealthyAsync()
         {
             await Task.Delay(10);
 
             try
             {
-
                 return _notes != null;
             }
             catch
@@ -148,5 +180,3 @@ namespace NoteApp.Services
         }
     }
 }
-
-// I'm not actually sure why this file is here, but deleting it breaks the build so...

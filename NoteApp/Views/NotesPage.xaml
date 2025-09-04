@@ -16,7 +16,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Header section -->
+        <!-- 
+             |                     |
+             |   Header Section    |
+             |                     |
+              -->
         <Border Grid.Row="0" 
                 StrokeThickness="2"
                 Stroke="{StaticResource ButtonShadow}"
@@ -28,6 +32,11 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 
+                <!-- 
+                     |                     |
+                     |  Title & Search     |
+                     |                     |
+                      -->
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -36,7 +45,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <Label Grid.Column="0"
-                           Text="Quicknote v4.1.0"
+                           Text="Quicknote v4.1.1"
                            FontAttributes="Bold"
                            FontSize="16"
                            VerticalOptions="Center"
@@ -84,6 +93,11 @@
                     </HorizontalStackLayout>
                 </Grid>
                 
+                <!-- 
+                     |                     |
+                     |  Filter Controls    |
+                     |                     |
+                      -->
                 <Grid Grid.Row="1" Margin="0,4,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -157,6 +171,11 @@
                             Margin="2,0,0,0" />
                 </Grid>
                 
+                <!-- 
+                     |                     |
+                     |   Status Display    |
+                     |                     |
+                      -->
                 <Border Grid.Row="2"
                         StrokeThickness="1"
                         Stroke="{StaticResource Gray400}"
@@ -198,7 +217,11 @@
             </Grid>
         </Border>
 
-        <!-- Notes List -->
+        <!-- 
+             |                     |
+             |    Notes List       |
+             |                     |
+              -->
         <Border Grid.Row="1" 
                 StrokeThickness="2"
                 BackgroundColor="{StaticResource ContentWhite}"
@@ -223,7 +246,11 @@
                                 BackgroundColor="Transparent"
                                 VerticalScrollBarVisibility="Always">
                     
-                    <!-- FIXED Empty View with Working Button -->
+                    <!-- 
+                         |                     |
+                         |   Empty State       |
+                         |                     |
+                          -->
                     <CollectionView.EmptyView>
                         <Border StrokeThickness="3"
                                 Stroke="{StaticResource Gray500}"
@@ -250,18 +277,23 @@
                                        FontSize="11" />
                                
                                <Button Text="➕ Create New Note"
-        Command="{Binding AddNoteCommand}"
-        HorizontalOptions="Center"
-        FontFamily="MS Sans Serif"
-        FontSize="11"
-        BackgroundColor="{StaticResource AccentBlue}"
-        TextColor="White"
-        Padding="12,6"
-        MinimumWidthRequest="140" />
+                                        Command="{Binding AddNoteCommand}"
+                                        HorizontalOptions="Center"
+                                        FontFamily="MS Sans Serif"
+                                        FontSize="11"
+                                        BackgroundColor="{StaticResource AccentBlue}"
+                                        TextColor="White"
+                                        Padding="12,6"
+                                        MinimumWidthRequest="140" />
                             </VerticalStackLayout>
                         </Border>
                     </CollectionView.EmptyView>
                     
+                    <!-- 
+                         |                     |
+                         |   Note Items        |
+                         |                     |
+                          -->
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:Note">
                             <Border StrokeThickness="2"
@@ -286,6 +318,11 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     
+                                    <!-- 
+                                         |                     |
+                                         |    Note Icon        |
+                                         |                     |
+                                          -->
                                     <Border Grid.Column="0"
                                             BackgroundColor="{StaticResource Gray200}"
                                             WidthRequest="40"
@@ -297,6 +334,11 @@
                                                VerticalOptions="Center" />
                                     </Border>
                                     
+                                    <!-- 
+                                         |                     |
+                                         |   Note Content      |
+                                         |                     |
+                                          -->
                                     <Grid Grid.Column="1" Padding="8,6">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -340,6 +382,11 @@
                                         </HorizontalStackLayout>
                                     </Grid>
                                     
+                                    <!-- 
+                                         |                     |
+                                         |  Action Buttons     |
+                                         |                     |
+                                          -->
                                     <VerticalStackLayout Grid.Column="2" 
                                                        Spacing="2"
                                                        VerticalOptions="Center"
@@ -375,6 +422,11 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     
+                    <!-- 
+                         |                     |
+                         |    Loading More     |
+                         |                     |
+                          -->
                     <CollectionView.Footer>
                         <StackLayout IsVisible="{Binding IsLoadingMore}" Padding="10">
                             <ActivityIndicator IsRunning="True" Color="{StaticResource AccentBlue}" />
@@ -388,7 +440,11 @@
             </RefreshView>
         </Border>
 
-        <!-- Status bar -->
+        <!-- 
+             |                     |
+             |    Status Bar       |
+             |                     |
+              -->
         <Border Grid.Row="2"
                 StrokeThickness="2"
                 BackgroundColor="{StaticResource ButtonFace}">
@@ -410,6 +466,11 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 
+                <!-- 
+                     |                     |
+                     |   System Buttons    |
+                     |                     |
+                      -->
                 <HorizontalStackLayout Grid.Column="0" Spacing="2">
                     <Button Text="❓"
                             Command="{Binding ShowHelpCommand}"
@@ -418,27 +479,21 @@
                             FontFamily="MS Sans Serif"
                             FontSize="12"
                             Padding="2" />
-                    <Button Text="⚙"
+                    <Button Text="⚙️"
                             Command="{Binding OpenSettingsCommand}"
                             WidthRequest="24"
                             HeightRequest="24"
                             FontFamily="MS Sans Serif"
                             FontSize="12"
                             Padding="2" />
-                  <!--  <Button Text="Start"
-                            WidthRequest="54"
-                            HeightRequest="24"
-                            FontFamily="MS Sans Serif"
-                            FontSize="10"
-                            Padding="2">
-                        <Button.ImageSource>
-                            <FontImageSource Glyph="⊞"
-                                            Size="12"
-                                            Color="{StaticResource Black}" />
-                        </Button.ImageSource>
-                    </Button> !-->
+                 
                 </HorizontalStackLayout>
                 
+                <!-- 
+                     |                     |
+                     |   Status Display    |
+                     |                     |
+                      -->
                 <Border Grid.Column="1"
                         StrokeThickness="1"
                         Stroke="{StaticResource Gray500}"
@@ -458,6 +513,11 @@
                     </HorizontalStackLayout>
                 </Border>
                 
+                <!-- 
+                     |                     |
+                     |  Action Buttons     |
+                     |                     |
+                      -->
                 <HorizontalStackLayout Grid.Column="2" Spacing="2">
                     <Button Text="New"
                             Command="{Binding AddNoteCommand}"
@@ -489,7 +549,11 @@
             </Grid>
         </Border>
 
-        <!-- Loading overlay -->
+        <!-- 
+             |                     |
+             |  Loading Overlay    |
+             |                     |
+              -->
         <Border Grid.Row="1"
                 IsVisible="{Binding IsBusy}"
                 StrokeThickness="3"

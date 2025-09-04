@@ -2,6 +2,11 @@ using NoteApp.Models;
 
 namespace NoteApp.Services
 {
+    // |------------------------------------------------------|
+    // |                                                      |
+    // |               Note Service Interface                 |
+    // |                                                      |
+    // |------------------------------------------------------|
     public interface INoteService
     {
         Task<List<Note>> GetNotesAsync();

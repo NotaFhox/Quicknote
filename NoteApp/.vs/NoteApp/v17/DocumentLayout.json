@@ -38,10 +38,9 @@
               "RelativeDocumentMoniker": "Views\\SettingsPage.xaml",
               "ToolTip": "D:\\NoteQuick\\Quicknote-main(1)\\Quicknote-main\\NoteApp\\Views\\SettingsPage.xaml",
               "RelativeToolTip": "Views\\SettingsPage.xaml",
-              "ViewState": "AgIAABEBAAAAAAAAAAAiwC0BAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAAAIBAAAAAAAAAAAiwBoBAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-09-04T01:00:17.085Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-04T01:00:17.085Z"
             },
             {
               "$type": "Document",
@@ -51,7 +50,7 @@
               "RelativeDocumentMoniker": "Views\\NotesPage.xaml",
               "ToolTip": "D:\\NoteQuick\\Quicknote-main(1)\\Quicknote-main\\NoteApp\\Views\\NotesPage.xaml",
               "RelativeToolTip": "Views\\NotesPage.xaml",
-              "ViewState": "AgIAAJkBAAAAAAAAAADgv6kBAAApAAAAAAAAAA==",
+              "ViewState": "AgIAANYBAAAAAAAAAADgv/0BAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-09-02T08:14:15.506Z",
               "EditorCaption": ""

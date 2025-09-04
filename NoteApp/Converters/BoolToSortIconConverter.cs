@@ -2,6 +2,11 @@ using System.Globalization;
 
 namespace NoteApp.Converters
 {
+    // |---------------------|
+    // |                     |
+    // | String Converter    |
+    // |                     |
+    // |---------------------|
     public class StringIsNotNullOrEmptyConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -19,6 +24,11 @@ namespace NoteApp.Converters
         }
     }
 
+    // |---------------------|
+    // |                     |
+    // |   Sort Converter    |
+    // |                     |
+    // |---------------------|
     public class BoolToSortIconConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -40,6 +50,11 @@ namespace NoteApp.Converters
         }
     }
 
+    // |---------------------|
+    // |                     |
+    // | Integer Converter   |
+    // |                     |
+    // |---------------------|
     public class IntToBoolConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -57,6 +72,11 @@ namespace NoteApp.Converters
         }
     }
 
+    // |---------------------|
+    // |                     |
+    // | DateTime Converter  |
+    // |                     |
+    // |---------------------|
     public class DateTimeToRelativeTimeConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
