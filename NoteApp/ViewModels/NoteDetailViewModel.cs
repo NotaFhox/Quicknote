@@ -401,7 +401,7 @@ Visit Settings from the main screen to:
 • Configure auto-save intervals
 • Change default category
 
-Version: Quicknote 4.0.0 - Fhox Edition 2025";
+Version: Quicknote 4.1.0 - Fhox Edition 2025";
 
             await Shell.Current.DisplayAlert("Help - Quicknote", helpText, "Close");
         }

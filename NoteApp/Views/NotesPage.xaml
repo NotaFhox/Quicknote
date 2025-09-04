@@ -16,7 +16,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Header section remains the same... -->
+        <!-- Header section -->
         <Border Grid.Row="0" 
                 StrokeThickness="2"
                 Stroke="{StaticResource ButtonShadow}"
@@ -36,7 +36,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <Label Grid.Column="0"
-                           Text="Quicknote"
+                           Text="Quicknote v4.1.0"
                            FontAttributes="Bold"
                            FontSize="16"
                            VerticalOptions="Center"
@@ -179,7 +179,7 @@
                                    FontSize="10"
                                    VerticalOptions="Center"
                                    IsVisible="{Binding HasMoreItems}" />
-                            <Label Text="• Auto-save enabled"
+                            <Label Text=""
                                    FontFamily="MS Sans Serif"
                                    FontSize="9"
                                    TextColor="Green"
@@ -222,6 +222,8 @@
                                 RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
                                 BackgroundColor="Transparent"
                                 VerticalScrollBarVisibility="Always">
+                    
+                    <!-- FIXED Empty View with Working Button -->
                     <CollectionView.EmptyView>
                         <Border StrokeThickness="3"
                                 Stroke="{StaticResource Gray500}"
@@ -246,12 +248,16 @@
                                        HorizontalTextAlignment="Center"
                                        FontFamily="MS Sans Serif"
                                        FontSize="11" />
-                                <Button Text="➕ Create New Note"
-                                        Command="{Binding AddNoteCommand}"
-                                        HorizontalOptions="Center"
-                                        FontFamily="MS Sans Serif"
-                                        FontSize="11"
-                                        Padding="12,4" />
+                               
+                               <Button Text="➕ Create New Note"
+        Command="{Binding AddNoteCommand}"
+        HorizontalOptions="Center"
+        FontFamily="MS Sans Serif"
+        FontSize="11"
+        BackgroundColor="{StaticResource AccentBlue}"
+        TextColor="White"
+        Padding="12,6"
+        MinimumWidthRequest="140" />
                             </VerticalStackLayout>
                         </Border>
                     </CollectionView.EmptyView>
@@ -412,14 +418,14 @@
                             FontFamily="MS Sans Serif"
                             FontSize="12"
                             Padding="2" />
-                    <Button Text="⚙️"
+                    <Button Text="⚙"
                             Command="{Binding OpenSettingsCommand}"
                             WidthRequest="24"
                             HeightRequest="24"
                             FontFamily="MS Sans Serif"
                             FontSize="12"
                             Padding="2" />
-                    <Button Text="Start"
+                  <!--  <Button Text="Start"
                             WidthRequest="54"
                             HeightRequest="24"
                             FontFamily="MS Sans Serif"
@@ -430,7 +436,7 @@
                                             Size="12"
                                             Color="{StaticResource Black}" />
                         </Button.ImageSource>
-                    </Button>
+                    </Button> !-->
                 </HorizontalStackLayout>
                 
                 <Border Grid.Column="1"
@@ -444,7 +450,7 @@
                                VerticalOptions="Center"
                                FontFamily="MS Sans Serif"
                                FontSize="10" />
-                        <Label Text="• Press ❓ for help • ⚙️ for settings"
+                        <Label Text="• Press ❓ for help • ⚙️ for settings • v4.1.0"
                                VerticalOptions="Center"
                                FontFamily="MS Sans Serif"
                                FontSize="9"

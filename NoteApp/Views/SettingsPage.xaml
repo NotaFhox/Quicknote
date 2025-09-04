@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Header -->
+        
         <Border Grid.Row="0"
                 StrokeThickness="2"
                 Stroke="{StaticResource ButtonShadow}"
@@ -48,14 +48,14 @@
             </Grid>
         </Border>
 
-        <!-- Settings Content -->
+  
         <ScrollView Grid.Row="1" Padding="8">
             <VerticalStackLayout Spacing="12">
                 
-                <!-- Appearance Settings -->
+                
                 <Border Style="{StaticResource ContentFrame}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="🎨 Appearance"
+                        <Label Text="Appearance"
                                FontSize="16"
                                FontAttributes="Bold"
                                FontFamily="MS Sans Serif" />
@@ -126,10 +126,10 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Performance Settings -->
+                
                 <Border Style="{StaticResource ContentFrame}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="⚡ Performance"
+                        <Label Text="Performance"
                                FontSize="16"
                                FontAttributes="Bold"
                                FontFamily="MS Sans Serif" />
@@ -265,43 +265,45 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- About Section -->
-                <Border Style="{StaticResource ContentFrame}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="ℹ️ About"
-                               FontSize="16"
-                               FontAttributes="Bold"
-                               FontFamily="MS Sans Serif" />
-                        
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="Quicknote"
-                                   FontSize="20"
-                                   FontAttributes="Bold"
-                                   FontFamily="MS Sans Serif"
-                                   HorizontalTextAlignment="Center" />
-                            
-                            <Label Text="Version 4.0.0 - Fhox Edition 2025"
-                                   FontFamily="MS Sans Serif"
-                                   FontSize="12"
-                                   HorizontalTextAlignment="Center"
-                                   TextColor="{StaticResource Gray600}" />
-                            
-                            <Label Text="A simple, fast note-taking app built for performance"
-                                   FontFamily="MS Sans Serif"
-                                   FontSize="11"
-                                   HorizontalTextAlignment="Center"
-                                   Margin="0,8,0,0" />
-                            
-                            <Label Text=""
-                                   FontFamily="MS Sans Serif"
-                                   FontSize="10"
-                                   HorizontalTextAlignment="Center"
-                                   TextColor="{StaticResource Gray600}" />
-                        </VerticalStackLayout>
-                    </VerticalStackLayout>
-                </Border>
 
-                <!-- Danger Zone -->
+<Border Style="{StaticResource ContentFrame}">
+    <VerticalStackLayout Spacing="8">
+        <Label Text="ℹ️ About"
+               FontSize="16"
+               FontAttributes="Bold"
+               FontFamily="MS Sans Serif" />
+        
+        <VerticalStackLayout Spacing="4">
+            <Label Text="Quicknote"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   FontFamily="MS Sans Serif"
+                   HorizontalTextAlignment="Center" />
+            
+            <Label Text="Version 4.1.0 - Fhox Edition 2025"
+                   FontFamily="MS Sans Serif"
+                   FontSize="12"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource Gray600}" />
+            
+            <Label Text=""
+                   FontFamily="MS Sans Serif"
+                   FontSize="11"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,8,0,0" />
+            
+            <Label Text=""
+                   FontFamily="MS Sans Serif"
+                   FontSize="10"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource AccentBlue}"
+                   FontAttributes="Italic"
+                   Margin="0,4,0,0" />
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</Border>
+
+                
                 <Border BackgroundColor="{StaticResource ClassicRed}"
                         StrokeThickness="2"
                         Stroke="{StaticResource ButtonShadow}"
@@ -342,7 +344,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Footer -->
+       
         <Border Grid.Row="2"
                 StrokeThickness="2"
                 BackgroundColor="{StaticResource ButtonFace}">

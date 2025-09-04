@@ -17,9 +17,9 @@
 		<!-- App Identifier -->
 		<ApplicationId>com.fhoxedition.quicknote</ApplicationId>
 
-		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<!-- Updated Versions for 4.1.0 -->
+		<ApplicationDisplayVersion>4.1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>41</ApplicationVersion>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>

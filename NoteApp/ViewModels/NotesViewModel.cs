@@ -1,4 +1,3 @@
-
 using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -140,7 +139,7 @@ namespace NoteApp.ViewModels
         public ICommand DeleteSelectedNotesCommand { get; }
         public ICommand ShowHelpCommand { get; }
         public ICommand OpenSettingsCommand { get; }
-        // Removed duplicate constructor
+
         public NotesViewModel(INoteService noteService, ILogger<NotesViewModel>? logger = null) : base(logger)
         {
             _noteService = noteService;
@@ -516,7 +515,7 @@ CUSTOMISATION:
 DATABASE:
 Your notes are stored locally on this device.
 
-Version: Quicknote 4.0.0 - Fhox Edition 2025";
+Version: Quicknote 4.1.0 - Fhox Edition 2025";
 
             await Shell.Current.DisplayAlert("Help - Quicknote", helpText, "Close");
         }
@@ -525,12 +524,29 @@ Version: Quicknote 4.0.0 - Fhox Edition 2025";
         {
             try
             {
+                Logger?.LogDebug("Opening settings page");
+                System.Diagnostics.Debug.WriteLine("Attempting to navigate to SettingsPage");
+                
                 await Shell.Current.GoToAsync(nameof(SettingsPage));
+                
+                Logger?.LogDebug("Successfully navigated to settings");
+                System.Diagnostics.Debug.WriteLine("Navigation to SettingsPage completed");
             }
             catch (Exception ex)
             {
                 Logger?.LogError(ex, "Error navigating to settings");
-                await Shell.Current.DisplayAlert("Error", "Could not open settings. Please try again.", "OK");
+                System.Diagnostics.Debug.WriteLine($"Settings navigation error: {ex.Message}");
+                
+                // Try alternative navigation method
+                try
+                {
+                    await Shell.Current.GoToAsync("//SettingsPage");
+                }
+                catch (Exception ex2)
+                {
+                    Logger?.LogError(ex2, "Error with alternative navigation to settings");
+                    await Shell.Current.DisplayAlert("Error", $"Could not open settings. Error: {ex.Message}", "OK");
+                }
             }
         }
 

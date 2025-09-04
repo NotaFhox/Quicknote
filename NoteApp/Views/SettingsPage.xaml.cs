@@ -4,13 +4,14 @@ namespace NoteApp.Views
 {
     public partial class SettingsPage : ContentPage
     {
-        private SettingsViewModel _viewModel;
+        private readonly SettingsViewModel _viewModel;
 
         public SettingsPage(SettingsViewModel viewModel)
         {
             InitializeComponent();
-            _viewModel = viewModel;
-            BindingContext = viewModel;
+            
+            _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+            BindingContext = _viewModel;
             
             System.Diagnostics.Debug.WriteLine($"SettingsPage created with ViewModel: {viewModel != null}");
             System.Diagnostics.Debug.WriteLine($"Settings object: {viewModel?.Settings != null}");
@@ -19,10 +20,18 @@ namespace NoteApp.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            _viewModel.Initialize();
             
-            System.Diagnostics.Debug.WriteLine("SettingsPage appearing");
-            System.Diagnostics.Debug.WriteLine($"Dark mode setting: {_viewModel?.Settings?.IsDarkMode}");
+            try
+            {
+                _viewModel.Initialize();
+                
+                System.Diagnostics.Debug.WriteLine("SettingsPage appearing");
+                System.Diagnostics.Debug.WriteLine($"Dark mode setting: {_viewModel?.Settings?.IsDarkMode}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in SettingsPage.OnAppearing: {ex.Message}");
+            }
         }
     }
 }

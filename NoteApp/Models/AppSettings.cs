@@ -23,6 +23,7 @@ namespace NoteApp.Models
                 {
                     _isDarkMode = value;
                     OnPropertyChanged();
+                    System.Diagnostics.Debug.WriteLine($"Dark mode changed to: {value}");
                 }
             }
         }
@@ -122,31 +123,16 @@ namespace NoteApp.Models
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            try
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in OnPropertyChanged for {propertyName}: {ex.Message}");
+            }
         }
 
-        public void LoadFromPreferences()
-        {
-            IsDarkMode = Preferences.Get(nameof(IsDarkMode), false);
-            IsPerformanceMode = Preferences.Get(nameof(IsPerformanceMode), false);
-            AutoSaveEnabled = Preferences.Get(nameof(AutoSaveEnabled), true);
-            AutoSaveInterval = Preferences.Get(nameof(AutoSaveInterval), 10);
-            DefaultCategory = Preferences.Get(nameof(DefaultCategory), "General");
-            ShowLineNumbers = Preferences.Get(nameof(ShowLineNumbers), false);
-            FontSize = Preferences.Get(nameof(FontSize), 12);
-            FontFamily = Preferences.Get(nameof(FontFamily), "System Default");
-        }
-
-        public void SaveToPreferences()
-        {
-            Preferences.Set(nameof(IsDarkMode), IsDarkMode);
-            Preferences.Set(nameof(IsPerformanceMode), IsPerformanceMode);
-            Preferences.Set(nameof(AutoSaveEnabled), AutoSaveEnabled);
-            Preferences.Set(nameof(AutoSaveInterval), AutoSaveInterval);
-            Preferences.Set(nameof(DefaultCategory), DefaultCategory);
-            Preferences.Set(nameof(ShowLineNumbers), ShowLineNumbers);
-            Preferences.Set(nameof(FontSize), FontSize);
-            Preferences.Set(nameof(FontFamily), FontFamily);
-        }
+        
     }
 }

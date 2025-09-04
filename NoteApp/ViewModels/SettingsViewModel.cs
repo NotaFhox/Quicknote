@@ -24,8 +24,11 @@ namespace NoteApp.ViewModels
         public SettingsViewModel(ISettingsService settingsService, ILogger<SettingsViewModel>? logger = null) 
             : base(logger)
         {
-            _settingsService = settingsService;
+            _settingsService = settingsService ?? throw new ArgumentNullException(nameof(settingsService));
             Title = "Settings";
+
+            Logger?.LogDebug("SettingsViewModel constructor - Settings service: {HasService}", _settingsService != null);
+            Logger?.LogDebug("Settings object: {HasSettings}", _settingsService.Settings != null);
 
             // Initialize collections
             AvailableCategories = new ObservableCollection<string>
@@ -54,103 +57,142 @@ namespace NoteApp.ViewModels
             ResetSettingsCommand = CreateAsyncCommand(ResetSettings);
             BackCommand = CreateAsyncCommand(GoBack);
             ClearDataCommand = CreateAsyncCommand(ClearAllData);
+
+            // Load settings on initialization
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            try
+            {
+                Logger?.LogDebug("SettingsViewModel Initialize called");
+                Logger?.LogDebug("Settings service: {HasService}", _settingsService != null);
+                Logger?.LogDebug("Settings object: {HasSettings}", _settingsService?.Settings != null);
+                
+                if (_settingsService?.Settings != null)
+                {
+                    Logger?.LogDebug("Dark mode: {DarkMode}", _settingsService.Settings.IsDarkMode);
+                    Logger?.LogDebug("Auto-save enabled: {AutoSave}", _settingsService.Settings.AutoSaveEnabled);
+                    Logger?.LogDebug("Font size: {FontSize}", _settingsService.Settings.FontSize);
+                }
+
+                // Ensure settings are loaded
+                _settingsService?.LoadSettings();
+                
+                // Notify UI that settings are available
+                OnPropertyChanged(nameof(Settings));
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error initializing settings view model");
+            }
         }
 
         private async Task ResetSettings()
         {
-            var confirm = await Shell.Current.DisplayAlert(
-                "Reset Settings", 
-                "Are you sure you want to reset all settings to defaults? This cannot be undone.", 
-                "Reset", 
-                "Cancel");
-
-            if (confirm)
+            try
             {
-                _settingsService.ResetToDefaults();
-                await Shell.Current.DisplayAlert("Settings Reset", "All settings have been reset to defaults.", "OK");
+                var confirm = await Shell.Current.DisplayAlert(
+                    "Reset Settings", 
+                    "Are you sure you want to reset all settings to defaults? This cannot be undone.", 
+                    "Reset", 
+                    "Cancel");
+
+                if (confirm)
+                {
+                    _settingsService.ResetToDefaults();
+                    
+                    // Force UI update
+                    OnPropertyChanged(nameof(Settings));
+                    
+                    await Shell.Current.DisplayAlert("Settings Reset", "All settings have been reset to defaults.", "OK");
+                    
+                    Logger?.LogInformation("Settings reset to defaults");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error resetting settings");
+                await Shell.Current.DisplayAlert("Error", "Could not reset settings. Please try again.", "OK");
             }
         }
 
         private async Task GoBack()
         {
-            await Shell.Current.GoToAsync("..");
+            try
+            {
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error navigating back");
+                await Shell.Current.DisplayAlert("Error", "Could not navigate back. Please try again.", "OK");
+            }
         }
 
         private async Task ClearAllData()
         {
-            var confirm = await Shell.Current.DisplayAlert(
-                "Clear All Data", 
-                "⚠️ WARNING: This will permanently delete ALL your notes and settings. This action cannot be undone!\n\nAre you absolutely sure?", 
-                "DELETE ALL", 
-                "Cancel");
-
-            if (confirm)
+            try
             {
-                var doubleConfirm = await Shell.Current.DisplayAlert(
-                    "Final Confirmation", 
-                    "This is your last chance! All notes will be permanently lost.\n\nConfirm deletion?", 
-                    "YES, DELETE EVERYTHING", 
+                var confirm = await Shell.Current.DisplayAlert(
+                    "Clear All Data", 
+                    "⚠️ WARNING: This will permanently delete ALL your notes and settings. This action cannot be undone!\n\nAre you absolutely sure?", 
+                    "DELETE ALL", 
                     "Cancel");
 
-                if (doubleConfirm)
+                if (confirm)
                 {
-                    try
+                    var doubleConfirm = await Shell.Current.DisplayAlert(
+                        "Final Confirmation", 
+                        "This is your last chance! All notes will be permanently lost.\n\nConfirm deletion?", 
+                        "YES, DELETE EVERYTHING", 
+                        "Cancel");
+
+                    if (doubleConfirm)
                     {
-                        IsBusy = true;
-                        
-                        // Clear preferences
-                        Preferences.Clear();
-                        
-                        // Delete database file
-                        var dbPath = Path.Combine(FileSystem.AppDataDirectory, "notes.db");
-                        if (File.Exists(dbPath))
+                        await ExecuteAsync(async () =>
                         {
-                            File.Delete(dbPath);
-                        }
-
-                        // Delete any other app data files
-                        var appDataFiles = Directory.GetFiles(FileSystem.AppDataDirectory, "*.*");
-                        foreach (var file in appDataFiles)
-                        {
-                            try
+                            // Clear preferences
+                            Preferences.Clear();
+                            
+                            // Delete database file
+                            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "notes.db");
+                            if (File.Exists(dbPath))
                             {
-                                File.Delete(file);
+                                File.Delete(dbPath);
                             }
-                            catch
+
+                            // Delete any other app data files
+                            var appDataFiles = Directory.GetFiles(FileSystem.AppDataDirectory, "*.*");
+                            foreach (var file in appDataFiles)
                             {
-                                // Ignore individual file delete errors
+                                try
+                                {
+                                    File.Delete(file);
+                                }
+                                catch
+                                {
+                                    // Ignore individual file delete errors
+                                }
                             }
-                        }
 
-                        await Shell.Current.DisplayAlert(
-                            "Data Cleared", 
-                            "All notes and settings have been deleted. The app will now restart.", 
-                            "OK");
+                            await Shell.Current.DisplayAlert(
+                                "Data Cleared", 
+                                "All notes and settings have been deleted. The app will now restart.", 
+                                "OK");
 
-                        // Force restart by closing the app
-                        System.Environment.Exit(0);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger?.LogError(ex, "Error clearing data");
-                        await Shell.Current.DisplayAlert("Error", "Could not clear all data. Please try again.", "OK");
-                    }
-                    finally
-                    {
-                        IsBusy = false;
+                            // Force restart by closing the app
+                            System.Environment.Exit(0);
+                        });
                     }
                 }
             }
-        }
-
-        public void Initialize()
-        {
-            System.Diagnostics.Debug.WriteLine("SettingsViewModel Initialize called");
-            System.Diagnostics.Debug.WriteLine($"Settings service: {_settingsService != null}");
-            System.Diagnostics.Debug.WriteLine($"Settings object: {_settingsService?.Settings != null}");
-            System.Diagnostics.Debug.WriteLine($"Dark mode: {_settingsService?.Settings?.IsDarkMode}");
-            
-            OnPropertyChanged(nameof(Settings));
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error clearing all data");
+                await Shell.Current.DisplayAlert("Error", "Could not clear all data. Please try again.", "OK");
+            }
         }
     }
 }
